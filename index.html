@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<title>Blue Mold · centrum dowodzenia Rovi Here</title>
+<meta name="description" content="Blue Mold: centrum dowodzenia RoviHere – pulpit publikacji, polecenia dla działów, statek i akta załogi.">
+<meta name="theme-color" content="#030e16">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Blue Mold">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="ikony/ikona-192.png">
+<link rel="apple-touch-icon" href="ikony/apple-touch-icon.png">
+<link rel="preload" href="fonts/BigShouldersDisplay-var.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-crew" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.2"/><path d="M3 19c.6-3.4 3-5.2 6-5.2s5.4 1.8 6 5.2"/><circle cx="17" cy="9" r="2.4"/><path d="M15.5 13.6c2.6-.3 4.8 1.2 5.5 4.4"/></symbol>
+  <symbol id="i-gear" viewBox="0 0 24 24"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2.2"/><circle cx="10" cy="17" r="2.2"/></symbol>
+  <symbol id="i-snd" viewBox="0 0 24 24"><path d="M4 10v4h3.5L12 18V6L7.5 10z"/><path class="w1" d="M15.5 9.5a3.5 3.5 0 0 1 0 5"/><path class="w2" d="M18 7a7 7 0 0 1 0 10"/><path class="mute" d="M16 9.5l5 5M21 9.5l-5 5"/></symbol>
+  <symbol id="i-fit" viewBox="0 0 24 24"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+  <symbol id="i-minus" viewBox="0 0 24 24"><path d="M5 12h14"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></symbol>
+  <symbol id="i-file" viewBox="0 0 24 24"><path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4M9 12h6M9 16h6"/></symbol>
+  <symbol id="i-ufo" viewBox="0 0 24 24"><path d="M8.3 10.2a3.7 3.7 0 0 1 7.4 0"/><ellipse cx="12" cy="11.6" rx="9.5" ry="3.1"/><path d="M8 17.2l-1.4 3M12 17.6v3M16 17.2l1.4 3"/></symbol>
+  <symbol id="i-radio" viewBox="0 0 24 24"><circle cx="12" cy="12" r="1.8"/><path d="M8.5 8.5a5 5 0 0 0 0 7M15.5 8.5a5 5 0 0 1 0 7M5.6 5.6a9 9 0 0 0 0 12.8M18.4 5.6a9 9 0 0 1 0 12.8"/></symbol>
+  <symbol id="i-scan" viewBox="0 0 24 24"><path d="M4 8V4h4M20 8V4h-4M4 16v4h4M20 16v4h-4M4 12h16"/></symbol>
+  <symbol id="i-dash" viewBox="0 0 24 24"><path d="M4 4h7v8H4zM13 4h7v5h-7zM13 11h7v9h-7zM4 14h7v6H4z"/></symbol>
+  <symbol id="i-cmd" viewBox="0 0 24 24"><path d="M4 5h16v14H4z"/><path d="M7.5 9.5l3 2.5-3 2.5M12.5 15h4"/></symbol>
+  <symbol id="i-link" viewBox="0 0 24 24"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/></symbol>
+  <symbol id="i-ref" viewBox="0 0 24 24"><path d="M19 12a7 7 0 1 1-2.1-5"/><path d="M19 4v4h-4"/></symbol>
+  <symbol id="i-send" viewBox="0 0 24 24"><path d="M4 12l16-8-6 16-2.5-6.5z"/><path d="M11.5 13.5L20 4"/></symbol>
+</svg>
+
+<div id="app">
+  <header class="hud">
+    <div class="strip">
+      <span class="strip-l">BLUE MOLD · RAPORT POKŁADOWY</span>
+      <span class="strip-r"><span id="chipStan" class="st stop"><i></i>STOP</span><span class="sep">·</span><span id="chipCzas">--:--</span></span>
+    </div>
+    <div class="bar">
+      <div class="logo"><b>BLUE MOLD</b><small>DOK. KX7-2189-0413 · CENTRUM DOWODZENIA ROVI HERE</small></div>
+      <nav class="tools">
+        <button class="ib lb" id="btnPulpit" aria-label="Pulpit – centrum dowodzenia" title="Pulpit"><svg><use href="#i-dash"/></svg><span>Pulpit</span></button>
+        <button class="ib lb" id="btnPolecenia" aria-label="Polecenia dla załogi" title="Polecenia"><svg><use href="#i-cmd"/></svg><span>Polecenia</span></button>
+        <button class="ib" id="btnZaloga" aria-label="Rejestr załogi" title="Rejestr załogi"><svg><use href="#i-crew"/></svg></button>
+        <button class="ib" id="btnSnd" aria-label="Dźwięk" title="Dźwięk"><svg><use href="#i-snd"/></svg></button>
+        <button class="ib" id="btnInfo" aria-label="Protokół statku i ustawienia" title="Protokół statku"><svg><use href="#i-gear"/></svg></button>
+      </nav>
+    </div>
+  </header>
+
+  <div id="stage">
+    <canvas id="cv" aria-label="Schemat statku Blue Mold z załogą"></canvas>
+    <div class="vign" aria-hidden="true"></div>
+    <div class="scan" aria-hidden="true"></div>
+    <div class="frame" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+    <div class="cap tl" aria-hidden="true"><i class="recd"></i>SKAN POKŁADU · NA ŻYWO</div>
+    <div class="cap tr" id="capCrew" aria-live="polite">ZAŁOGA 12</div>
+    <div class="zoom">
+      <button id="zIn" aria-label="Przybliż"><svg><use href="#i-plus"/></svg></button>
+      <button id="zOut" aria-label="Oddal"><svg><use href="#i-minus"/></svg></button>
+      <button id="zFit" aria-label="Cały statek"><svg><use href="#i-fit"/></svg></button>
+    </div>
+    <div id="toast" class="toast" role="status"></div>
+    <div id="stamp" class="bigstamp" aria-hidden="true" hidden><b>NADANO</b><small id="stampSub">KX7 · TX</small></div>
+    <button id="btnUfo" class="ufo-fab" type="button" aria-label="Nadaj wiadomość do Rovi"><span class="ufo-ic"><svg><use href="#i-ufo"/></svg></span><span class="ufo-l"><b>Nadaj do Rovi</b><small>kanał UFO · KX7-TX</small></span></button>
+    <div id="focus" class="focus" hidden>
+      <div class="f-por"><img id="fAv" alt=""></div>
+      <div class="fi"><small class="fref" id="fRef">AKTA OSOBOWE</small><b id="fName"></b><small id="fRole" class="frole"></small><span class="fnow"><i id="fSt" class="light"></i><em id="fStT"></em> · <span id="fNow"></span></span></div>
+      <button class="ib" id="fDos" aria-label="Otwórz akta" title="Akta"><svg><use href="#i-file"/></svg></button>
+      <button class="ib" id="fClose" aria-label="Zamknij"><svg><use href="#i-x"/></svg></button>
+    </div>
+  </div>
+
+  <aside id="roster" class="roster" aria-label="Rejestr załogi">
+    <div class="p-strip"><span>REJESTR ZAŁOGI</span><span id="rosterN">12 DZIAŁÓW</span></div>
+    <ol id="rosterList" class="roster-l"></ol>
+  </aside>
+
+  <aside id="radio" class="radio" aria-label="Radio pokładowe">
+    <button class="radio-h" id="radioH" type="button">
+      <span class="rec"><svg><use href="#i-radio"/></svg></span>
+      <span class="ch">KANAŁ 01 · TRANSKRYPT</span>
+      <img id="radioAv" alt="">
+      <span id="radioLast" class="last">nasłuch…</span><span class="arr">▴</span>
+    </button>
+    <ol id="feed" class="feed"></ol>
+  </aside>
+</div>
+
+<div id="sheet" class="sheet" role="dialog" aria-modal="true" hidden>
+  <div class="sheet-in">
+    <div class="sheet-strip"><span id="sheetL">KALLICHORE-7 · RAPORT INCYDENTU</span><span id="sheetR">BLUE MOLD</span>
+      <button class="ib close" id="sheetClose" aria-label="Zamknij"><svg><use href="#i-x"/></svg></button></div>
+    <div id="sheetBody"></div>
+  </div>
+</div>
+
+<div id="boot">
+  <div class="boot-art" aria-hidden="true"></div>
+  <div class="boot-mold" aria-hidden="true"></div>
+  <div class="boot-strip"><span>KALLICHORE-7 · RAPORT INCYDENTU</span><span class="red">KWARANTANNA POZIOM 5</span></div>
+  <p class="boot-doc">DOK. KX7-2189-0413 · BLUE MOLD · ZAPIS ODZYSKANY</p>
+  <div class="boot-in">
+    <p class="boot-author">ROVI HERE</p>
+    <h1><span>BLUE</span><span>MOLD</span></h1>
+    <div class="boot-rule"></div>
+    <p class="boot-sub">Akta załogi</p>
+    <div class="boot-stamp"><b>ODTAJNIONO</b><small>KX7 · 2189 · POZIOM 2</small></div>
+    <div id="bootLog" class="log"></div>
+  </div>
+  <div class="boot-foot">
+    <div class="bars"><i id="bootBar"></i></div>
+    <p>NIE ODPOWIADAĆ NA SYGNAŁ · NIE OTWIERAĆ ŁADOWNI NR 3</p>
+    <p class="skip">dotknij, aby pominąć</p>
+  </div>
+  <div class="frame" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+</div>
+
+<script src="data/zaloga.js"></script>
+<script src="data/stan.js"></script>
+<script src="app.js"></script>
+<script src="centrum.js"></script>
+</body>
+</html>

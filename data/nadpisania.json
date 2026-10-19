@@ -1,0 +1,22 @@
+{
+  "_opis": "Ręczne ustawienia statusu. stop=true: cała załoga ma pauzę, poza działami z listy 'wyjatki'. Po zmianie uruchom: python3 aktualizuj_stan.py",
+  "stop": false,
+  "stop_historia": "STOP z 2026-10-07 zdjęty 2026-10-09 (ZASADY.md: własne rutyny mają tylko X, Profesor i Pomysły; reszta na zlecenie).",
+  "pomin_okno_mtime": {
+    "od": "2026-10-18 12:00",
+    "do": "2026-10-18 12:12",
+    "_opis": "18.10.2026 ok. 12:07–12:09 cały /workspace/rovihere został skopiowany (ok. 1450 plików dostało tę samą datę), więc daty z tego okna nie świadczą o pracy działu – pomijane przy liczeniu 'ostatnio'."
+  },
+  "wyjatki": {
+    "pomysly": "na prośbę",
+    "prof": "na prośbę"
+  },
+  "notatki": {
+    "studio": "Ostatnio: strona v1 (mapa statku, PL/EN) + Impressum, zip gotowy do hostingu.",
+    "suno": "Pracuje tylko na prośbę, bez rutyn.",
+    "prof": "Pracuje na prośbę. Ostatnio: weryfikacja kosmologii i rozdziału „Roswell”.",
+    "pomysly": "Slot tygodniowy w poniedziałek 9:02 (KALENDARZ.md). Ostatnio: P-022–P-024 z 12.10 czekają na decyzję (PRZEPLYW.md).",
+    "mostek": "Od 08.10 łączy Koordynację, Odprawę i Energię (jedna poranna odprawa 7:56). Od 15.10 sam wrzuca Shorty (21:00) i długie filmy na YouTube (KALENDARZ.md).",
+    "jedzenie": "Prywatny, pracuje tylko na prośbę, bez rutyn."
+  }
+}
