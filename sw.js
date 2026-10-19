@@ -4,7 +4,7 @@
    - data/* (stan.json, stan.js): najpierw sieć, cache tylko awaryjnie offline.
    - Reszta plików aplikacji: najpierw cache (offline).
    Przy każdej zmianie plików aplikacji podbij CACHE – stara wersja zostanie usunięta przy aktywacji. */
-var CACHE = "bluemold-v6-centrum";
+var CACHE = "bluemold-v7-centrum";
 var PLIKI = ["./", "index.html", "style.css", "app.js", "centrum.js", "manifest.webmanifest", "data/zaloga.js", "data/stan.js", "data/stan.json",
   "ikony/ikona-192.png", "ikony/ikona-512.png", "ikony/apple-touch-icon.png",
   "fonts/BigShouldersDisplay-var.woff2", "fonts/IBMPlexMono-Regular-Latin1.woff2", "fonts/IBMPlexMono-Regular-Latin2.woff2",

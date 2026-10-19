@@ -1,5 +1,10 @@
 # Backend poleceń – instrukcja krok po kroku (Google Sheets + Apps Script)
 
+> **Wdrożony backend (19.10.2026, 10:36):** projekt samodzielny w script.google.com, kod =  (wersja z , ID arkusza wpisane jako SHEET_ID).
+> Adres /exec: https://script.google.com/macros/s/AKfycbw3UCB26CXzg4vAuljzxGTMDmvqGsCr7SfVGqYayBhcTX7o1IIeQzFw_HHIH9s_7YTi/exec
+> Arkusz: https://docs.google.com/spreadsheets/d/1LSQPVi5ds5xFDsQBDO0xCjrDOQU9ZkgbqD1lR6MOioM/edit
+> Aplikacja ma ten adres wpisany domyślnie – na każdym urządzeniu wystarczy podać token (Polecenia → Ustawienia łącza). Token ma tylko użytkownik; nie wpisujemy go w czat ani w pliki.
+
 Cel: aplikacja Blue Mold zapisuje polecenia do arkusza Google **„RoviHere Polecenia”**, a agenci je stamtąd odczytują i odpisują status.
 Wszystko jest darmowe i działa na Twoim koncie Google. Nic nie jest publiczne poza adresem web app, który bez tokenu odrzuca każde żądanie.
 

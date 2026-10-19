@@ -28,6 +28,7 @@
   var DNI_PELNE = ["niedziela", "poniedziałek", "wtorek", "środa", "czwartek", "piątek", "sobota"];
   var PRIO = [["niski", "Niski"], ["normalny", "Normalny"], ["wysoki", "Wysoki"], ["pilne", "Pilne"]];
   var K_URL = "bm-api-url", K_TOK = "bm-api-token", K_CACHE = "bm-cmd-cache";
+  var DOMYSLNY_URL = "https://script.google.com/macros/s/AKfycbw3UCB26CXzg4vAuljzxGTMDmvqGsCr7SfVGqYayBhcTX7o1IIeQzFw_HHIH9s_7YTi/exec";
 
   // ---------- czas w Berlinie ----------
   function berlinTeraz() {
@@ -66,7 +67,7 @@
   }
 
   // ---------- łącze z backendem ----------
-  function cfg() { return { url: (lsGet(K_URL) || "").trim(), token: lsGet(K_TOK) || "" }; }
+  function cfg() { return { url: (lsGet(K_URL) || DOMYSLNY_URL).trim(), token: lsGet(K_TOK) || "" }; }
   function ok() { var c = cfg(); return !!(c.url && c.token); }
   function host(u) { try { return new URL(u).host; } catch (e) { return u; } }
   function zadanie(metoda, dane) {
