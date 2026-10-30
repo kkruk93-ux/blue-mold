@@ -335,7 +335,7 @@ function arkusz_() {
  var sid =
   PropertiesService.getScriptProperties().getProperty(
    "SHEET_ID",
-  ) || "1LSQPVi5ds5xFDsQBDO0xCjrDOQU9ZkgbqD1lR6MOioM";
+  ) || ""; // set Script Property SHEET_ID (not stored in the repo)
  if (!sid)
   throw new Error(
    "Brak arkusza",
