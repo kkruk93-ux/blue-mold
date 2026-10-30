@@ -1,0 +1,40 @@
+# Deploys ONLY the public site in docs/ to GitHub Pages.
+# Internal files (internal/, backend/, tools/, store/, android/) are never published.
+# One-time setup by the repo owner: Settings → Pages → Build and deployment → Source: "GitHub Actions".
+name: Deploy public site to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+    paths: ["docs/**", ".github/workflows/pages.yml"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check that no internal files are in the public folder
+        run: |
+          set -e
+          if grep -rIlE "macros/s/[A-Za-z0-9_-]{20,}|spreadsheets/d/[A-Za-z0-9_-]{20,}" docs/; then
+            echo "::error::A real Apps Script or Google Sheet URL was found in docs/ – refusing to publish"; exit 1
+          fi
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: docs
+      - id: deployment
+        uses: actions/deploy-pages@v4

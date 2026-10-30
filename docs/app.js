@@ -1,9 +1,10 @@
-/* Blue Mold v3 – akta załogi Rovi Here w stylu książki „Blue Mold” (Cal Rennick). Canvas 2D, bez bibliotek, działa z file:// */
+/* Blue Mold v4 – crew files of Rovi's ship in the style of the book "Blue Mold" by Cal Rennick. Canvas 2D, no libraries, works from file:// */
 (function () {
   "use strict";
   var W = 360, H = 792, SPX = 180, CORR = [130, 230, 330, 432, 550, 652];
   var BX0 = -30, BX1 = 390, BY0 = -16, BY1 = 812;
-  var STAN = window.STAN || { firma: { stop: false }, dzialy: {} };
+  /* Status data is private and never published. The owner may import a status file on a device (Dashboard → Import), stored only in localStorage. */
+  var STAN = (function () { try { var j = JSON.parse(localStorage.getItem("bm-stan") || "null"); if (j && typeof j === "object") return j; } catch (e) {} return { firma: { stop: false }, dzialy: {} }; })();
   function lsGet(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
   function lsSet(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
   var SET = { snd: lsGet("bm-snd") === "1", crt: lsGet("bm-crt") === "1" };
@@ -12,25 +13,25 @@
 
   // ---------- pokoje ----------
   var R = {
-    most:    { n: "MOSTEK", own: "rovi", lc: "#8ff4fa", x: 108, y: 40, w: 144, h: 82, door: [180, 130], poly: [[142, 40], [218, 40], [252, 122], [108, 122]] },
-    novi:    { n: "PIECZA · NOVI", own: "novi", lc: "#b7c4ff", x: 34, y: 140, w: 126, h: 82, door: [97, 230] },
-    kambuz:  { n: "KAMBUZ · JEDZENIE", own: "jedzenie", lc: "#ffd29a", x: 200, y: 140, w: 126, h: 82, door: [263, 230] },
-    pomysly: { n: "LAB POMYSŁÓW", own: "pomysly", lc: "#7df0c8", x: 16, y: 240, w: 116, h: 82, door: [74, 330] },
-    wezel:   { n: "WĘZEŁ", own: "mostek", lc: "#5CE6F2", x: 140, y: 240, w: 80, h: 82, door: [180, 330] },
-    prof:    { n: "LAB PROFESORA", own: "prof", lc: "#8fd3ff", x: 228, y: 240, w: 116, h: 82, door: [286, 330] },
-    tiktok:  { n: "TIKTOK", own: "tiktok", lc: "#ff7f9e", x: 16, y: 340, w: 104, h: 84, door: [68, 432] },
-    x:       { n: "X", own: "x", lc: "#d6eef4", x: 128, y: 340, w: 104, h: 84, door: [180, 432] },
-    yt:      { n: "YOUTUBE", own: "yt", lc: "#ff6b5c", x: 240, y: 340, w: 104, h: 84, door: [292, 432] },
-    ksiazka: { n: "ARCHIWUM · KSIĄŻKA", own: "ksiazka", lc: "#a9bcff", x: 16, y: 442, w: 140, h: 100, door: [86, 550] },
-    mesa:    { n: "MESA · ODPOCZYNEK", own: null, lc: "#ffd9a6", x: 164, y: 442, w: 180, h: 100, door: [254, 550] },
-    suno:    { n: "STUDIO SUNO", own: "suno", lc: "#ffb27a", x: 16, y: 560, w: 130, h: 84, door: [81, 652] },
-    studio:  { n: "WARSZTAT · STUDIO", own: "studio", lc: "#5CE6F2", x: 154, y: 560, w: 190, h: 84, door: [249, 652] },
-    reaktor: { n: "REAKTOR · RDZEŃ", own: "mostek", lc: "#7ff3ff", x: 110, y: 662, w: 140, h: 88, door: [180, 652] }
+    most:    { n: "BRIDGE", own: "rovi", lc: "#8ff4fa", x: 108, y: 40, w: 144, h: 82, door: [180, 130], poly: [[142, 40], [218, 40], [252, 122], [108, 122]] },
+    novi:    { n: "OVERWATCH · NOVI", own: "novi", lc: "#b7c4ff", x: 34, y: 140, w: 126, h: 82, door: [97, 230] },
+    kambuz:  { n: "GALLEY", own: null, lc: "#ffd29a", x: 200, y: 140, w: 126, h: 82, door: [263, 230] },
+    pomysly: { n: "IDEA LAB", own: "pomysly", lc: "#7df0c8", x: 16, y: 240, w: 116, h: 82, door: [74, 330] },
+    wezel:   { n: "COMMS NODE", own: "mostek", lc: "#5CE6F2", x: 140, y: 240, w: 80, h: 82, door: [180, 330] },
+    prof:    { n: "SCIENCE LAB", own: "prof", lc: "#8fd3ff", x: 228, y: 240, w: 116, h: 82, door: [286, 330] },
+    tiktok:  { n: "SHORT SIGNALS", own: "tiktok", lc: "#ff7f9e", x: 16, y: 340, w: 104, h: 84, door: [68, 432] },
+    x:       { n: "CAPTAIN'S LOG", own: "x", lc: "#d6eef4", x: 128, y: 340, w: 104, h: 84, door: [180, 432] },
+    yt:      { n: "FILM ARCHIVE", own: "yt", lc: "#ff6b5c", x: 240, y: 340, w: 104, h: 84, door: [292, 432] },
+    ksiazka: { n: "ARCHIVE · BOOK", own: "ksiazka", lc: "#a9bcff", x: 16, y: 442, w: 140, h: 100, door: [86, 550] },
+    mesa:    { n: "MESS HALL", own: null, lc: "#ffd9a6", x: 164, y: 442, w: 180, h: 100, door: [254, 550] },
+    suno:    { n: "SOUND DECK", own: "suno", lc: "#ffb27a", x: 16, y: 560, w: 130, h: 84, door: [81, 652] },
+    studio:  { n: "WORKSHOP", own: "studio", lc: "#5CE6F2", x: 154, y: 560, w: 190, h: 84, door: [249, 652] },
+    reaktor: { n: "REACTOR CORE", own: "mostek", lc: "#7ff3ff", x: 110, y: 662, w: 140, h: 88, door: [180, 652] }
   };
   var MESA_SEATS = [[204, 474], [236, 474], [268, 474], [300, 474], [204, 526], [236, 526], [268, 526], [300, 526], [331, 482], [331, 518], [184, 500]];
   var ERRANDS = { prof: ["ksiazka", "yt", "pomysly", "wezel"], pomysly: ["most", "wezel", "prof", "kambuz"], mostek: ["reaktor", "wezel", "mesa", "studio", "novi"], novi: ["most", "wezel", "mesa", "studio", "pomysly"] };
   var STROLL = [[322, 456], [206, 738], [60, 462], [180, 285], [300, 456], [250, 612]];
-  var ROOM_TXT = { most: "Mostek dowodzenia", novi: "Piecza – stanowisko nadzoru", kambuz: "Kambuz – kuchnia pokładowa", pomysly: "Laboratorium pomysłów", wezel: "Węzeł łączności", prof: "Laboratorium Profesora", tiktok: "Stacja TikTok", x: "Stacja X", yt: "Stacja YouTube", ksiazka: "Archiwum „Błękitnej Pleśni”", mesa: "Mesa i odpoczynek", suno: "Studio Suno", studio: "Warsztat i studio", reaktor: "Reaktor" };
+  var ROOM_TXT = { most: "Command bridge", novi: "Overwatch station", kambuz: "Galley", pomysly: "Idea lab", wezel: "Comms node", prof: "Science lab", tiktok: "Short-signal station", x: "Captain's Log station", yt: "Film archive", ksiazka: "\u201cBlue Mold\u201d archive", mesa: "Mess hall", suno: "Sound deck", studio: "Workshop", reaktor: "Reactor" };
 
   function inRoom(p) {
     for (var k in R) { var r = R[k]; if (p.x >= r.x - 1 && p.x <= r.x + r.w + 1 && p.y >= r.y - 1 && p.y <= r.y + r.h + 1) return r; }
@@ -249,7 +250,7 @@
     hullPath(c); c.lineWidth = 5; c.strokeStyle = "#030a10"; c.stroke(); c.lineWidth = 1.8; c.strokeStyle = "rgba(63,224,230,.9)"; c.stroke(); c.lineWidth = .6; c.strokeStyle = "rgba(214,250,252,.6)"; c.stroke();
     c.save(); c.translate(180, 396); c.scale(1.045, 1.016); c.translate(-180, -396); hullPath(c); c.setLineDash([1.5, 2.5]); c.lineWidth = .5; c.strokeStyle = "rgba(92,230,242,.32)"; c.stroke(); c.restore();
     c.font = "600 6px Plex, monospace"; c.fillStyle = "rgba(143,244,250,.7)"; c.textAlign = "center"; c.fillText("B L U E   M O L D", 180, 762);
-    c.font = "500 3.6px Plex, monospace"; c.fillStyle = "rgba(143,244,250,.45)"; c.fillText("KX7-2189 · SCHEMAT POKŁADÓW", 180, 767.5); c.textAlign = "left";
+    c.font = "500 3.6px Plex, monospace"; c.fillStyle = "rgba(143,244,250,.45)"; c.fillText("KX7-2189 · DECK PLAN", 180, 767.5); c.textAlign = "left";
     // drzwi
     for (k in R) { var r = R[k]; DOORS.push({ k: k, x: r.door[0], y: k === "reaktor" ? r.y : (r.poly ? 122 : r.y + r.h), o: 0, col: r.lc }); }
     // pleśń
@@ -356,7 +357,7 @@
         lamp(180, 274, 50, lc, k); break;
       case "prof":
         box(c, 233, 245, 58, 18, 1.5, "#12261e", "rgba(143,211,255,.4)");
-        c.font = "500 4.4px Plex, monospace"; c.fillStyle = "rgba(230,240,235,.8)"; c.fillText("E = mc²", 237, 252); c.fillText("Słońce: 8,3 kpc", 237, 259);
+        c.font = "500 4.4px Plex, monospace"; c.fillStyle = "rgba(230,240,235,.8)"; c.fillText("E = mc²", 237, 252); c.fillText("Sun: 8.3 kpc", 237, 259);
         c.strokeStyle = "rgba(230,240,235,.6)"; c.lineWidth = .4; c.beginPath(); c.moveTo(268, 258); c.quadraticCurveTo(276, 248, 286, 256); c.stroke();
         box(c, 296, 246, 26, 7, 1, "#1a2b3d", "rgba(140,190,220,.3)"); ["#4fd18b", "#ff8a3d", "#8fd3ff", "#b18cff"].forEach(function (cc, j) { c.fillStyle = cc; c.beginPath(); c.moveTo(299 + j * 6, 246); c.lineTo(302 + j * 6, 246); c.lineTo(303.5 + j * 6, 251); c.lineTo(297.5 + j * 6, 251); c.fill(); });
         c.strokeStyle = "#7f8fa3"; c.lineWidth = .7; c.beginPath(); c.moveTo(332, 286); c.lineTo(328, 296); c.moveTo(332, 286); c.lineTo(336, 296); c.moveTo(332, 286); c.lineTo(332, 297); c.stroke();
@@ -643,7 +644,6 @@
   function emblem(c, id, d) {
     c.save(); c.translate(0, -12.5); c.fillStyle = d.akcent; c.strokeStyle = d.akcent; c.lineWidth = 1;
     switch (id) {
-      case "jedzenie": c.strokeStyle = "#8a6a3a"; c.lineWidth = .8; c.beginPath(); c.moveTo(-1.6, -3); c.lineTo(-1.6, 3); c.moveTo(-2.6, -3); c.lineTo(-2.6, -.8); c.moveTo(-.6, -3); c.lineTo(-.6, -.8); c.moveTo(-2.6, -.8); c.lineTo(-.6, -.8); c.stroke(); c.fillStyle = "#8a6a3a"; c.beginPath(); c.ellipse(2, -1.6, 1.2, 1.6, 0, 0, 7); c.fill(); c.fillRect(1.6, -.4, .8, 3.4); break;
       case "x": c.beginPath(); c.moveTo(-2.6, -2.6); c.lineTo(2.6, 2.6); c.moveTo(2.6, -2.6); c.lineTo(-2.6, 2.6); c.stroke(); break;
       case "yt": c.fillStyle = "#fff"; rr(c, -3.4, -2.4, 6.8, 4.8, 1.4); c.fill(); c.fillStyle = "#ff3b30"; c.beginPath(); c.moveTo(-1.2, -1.4); c.lineTo(1.8, 0); c.lineTo(-1.2, 1.4); c.fill(); break;
       case "tiktok": noteG(c, -.6, .4, "#ff3d7f"); noteG(c, -1, 0, "#25f4ee"); break;
@@ -669,7 +669,6 @@
         c.fillStyle = sl ? "#123" : "#5CE6F2"; c.fillRect(2.1, -3.1, .9, .9); c.restore(); break;
       case "novi": c.strokeStyle = "rgba(177,140,255," + (.6 + .3 * Math.sin(t * 3)) + ")"; c.lineWidth = 1; c.beginPath(); c.ellipse(0, -31.5, 5.5, 1.6, 0, 0, 7); c.stroke(); break;
       case "mostek": c.strokeStyle = "#BFF6FA"; c.lineWidth = 1; c.beginPath(); c.arc(0, -23, 7, Math.PI * 1.05, Math.PI * 1.95); c.stroke(); c.beginPath(); c.moveTo(6.6, -21); c.lineTo(3.6, -17.5); c.stroke(); c.fillStyle = "#5CE6F2"; c.fillRect(3, -18, 1.4, 1.2); break;
-      case "jedzenie": c.fillStyle = "#f4f7fa"; rr(c, -4.6, -31.2, 9.2, 4.4, 1); c.fill(); c.beginPath(); c.arc(-3, -32, 2.6, 0, 7); c.arc(0, -33.4, 3, 0, 7); c.arc(3, -32, 2.6, 0, 7); c.fill(); c.fillStyle = "#c9d4de"; c.fillRect(-4.6, -27.6, 9.2, .7); break;
       case "pomysly": var on = !sl; c.fillStyle = on ? "rgba(255,224,102," + (.8 + .2 * Math.sin(t * 4)) + ")" : "#5a5a3a"; c.beginPath(); c.arc(0, -35.5, 3, 0, 7); c.fill(); c.fillStyle = "#9aa"; c.fillRect(-1.4, -32.6, 2.8, 1.8);
         if (on) { c.strokeStyle = "rgba(255,224,102,.5)"; c.lineWidth = .6; for (var i = 0; i < 5; i++) { var a = -Math.PI / 2 + (i - 2) * .55; c.beginPath(); c.moveTo(Math.cos(a) * 4.5, -35.5 + Math.sin(a) * 4.5); c.lineTo(Math.cos(a) * 6.5, -35.5 + Math.sin(a) * 6.5); c.stroke(); } } break;
       case "prof": c.fillStyle = "#e1e5ea"; c.beginPath(); c.arc(-4.6, -26, 2.7, 0, 7); c.arc(4.6, -26, 2.7, 0, 7); c.arc(0, -28.4, 2.8, 0, 7); c.arc(-2.6, -28, 2.4, 0, 7); c.arc(2.6, -28, 2.4, 0, 7); c.fill();
@@ -804,7 +803,7 @@
   function radio(who, to, text, think) {
     var li = document.createElement("li"); if (think) li.className = "think";
     var w = who ? byId[who] : null;
-    li.innerHTML = (w ? '<img alt="" src="' + AV[who] + '">' : '<span class="sys">!</span>') + '<div class="rb"><div class="meta"><b>' + esc(w ? (w.d.krotko || w.d.imie) : "POKŁAD") + '</b>' + (to ? ' <i>→ ' + esc(byId[to].d.krotko || byId[to].d.imie) + '</i>' : '') + (think ? ' <i class="tk">myśl</i>' : '') + '<span class="t">' + berlin() + '</span></div><div class="m">' + esc(text) + '</div></div>';
+    li.innerHTML = (w ? '<img alt="" src="' + AV[who] + '">' : '<span class="sys">!</span>') + '<div class="rb"><div class="meta"><b>' + esc(w ? (w.d.krotko || w.d.imie) : "DECK") + '</b>' + (to ? ' <i>→ ' + esc(byId[to].d.krotko || byId[to].d.imie) + '</i>' : '') + (think ? ' <i class="tk">thought</i>' : '') + '<span class="t">' + berlin() + '</span></div><div class="m">' + esc(text) + '</div></div>';
     feedEl.insertBefore(li, feedEl.firstChild);
     while (feedEl.children.length > 80) { var rm = null; for (var q = feedEl.children.length - 1; q >= 0; q--) if (!feedEl.children[q].classList.contains("ufo")) { rm = feedEl.children[q]; break; } if (!rm) break; feedEl.removeChild(rm); }
     if (!think) { lastEl.textContent = (w ? w.d.imie + ": " : "") + text; lastAv.src = w ? AV[who] : AV.rovi; }
@@ -900,10 +899,10 @@
       var list = ERRANDS[c.id] || ["wezel", "mesa", "studio", "reaktor", "kambuz", "most"].filter(function (k) { return k !== c.d.pokoj; });
       var k = list[Math.floor(Math.random() * list.length)], r = R[k];
       target = k === "most" ? { x: 160, y: 108 } : { x: r.x + r.w * (.25 + Math.random() * .5), y: r.y + r.h * .74 };
-      label = { ksiazka: "sprawdza źródła w archiwum", yt: "zagląda do YouTube", wezel: "zgłasza się w Węźle", most: "zostawia notatkę na mostku", prof: "idzie do Profesora", pomysly: "zagląda do Lab Pomysłów", kambuz: "zagląda do kambuza", mesa: "idzie na kawę do mesy", studio: "odbiera render w Warsztacie", reaktor: "sprawdza reaktor", novi: "melduje się u Novi" }[k] || "idzie do: " + r.n;
+      label = { ksiazka: "checking sources in the archive", yt: "visiting the film archive", wezel: "reporting at the comms node", most: "leaving a note on the bridge", prof: "visiting the Professor", pomysly: "dropping by the idea lab", kambuz: "raiding the galley", mesa: "getting coffee in the mess hall", studio: "picking up a render in the workshop", reaktor: "checking the reactor", novi: "reporting to Novi" }[k] || "heading to: " + r.n;
     } else {
       if (c.id === "rovi" || Math.random() < .5) return;
-      var s = STROLL[Math.floor(Math.random() * STROLL.length)]; target = { x: s[0], y: s[1] }; label = "rozprostowuje nogi";
+      var s = STROLL[Math.floor(Math.random() * STROLL.length)]; target = { x: s[0], y: s[1] }; label = "stretching legs";
     }
     c.sleeping = false; c.task = { stage: "go", until: 0, label: label }; route(c, target);
   }
@@ -913,12 +912,12 @@
     else if (c.task.stage === "stay" && tNow > c.task.until) goHome(c);
   }
   function doing(c) {
-    if (c.scene) { var o = c.scene.parts.filter(function (p) { return p !== c; })[0]; return "Rozmawia: " + o.d.imie; }
+    if (c.scene) { var o = c.scene.parts.filter(function (p) { return p !== c; })[0]; return "Talking to " + o.d.imie; }
     if (c.task) return c.task.label.charAt(0).toUpperCase() + c.task.label.slice(1);
-    if (c.path.length) return "W drodze";
-    if (c.sleeping) return "Śpi" + (roomKey(c.home) === "mesa" ? " w mesie" : "");
-    if (active(c.id)) return "Pracuje: " + (ROOM_TXT[c.d.pokoj] || c.d.pokoj);
-    return c.id === "rovi" ? "Czuwa na mostku" : "Odpoczywa w mesie";
+    if (c.path.length) return "On the move";
+    if (c.sleeping) return "Asleep" + (roomKey(c.home) === "mesa" ? " in the mess hall" : "");
+    if (active(c.id)) return "Working: " + (ROOM_TXT[c.d.pokoj] || c.d.pokoj);
+    return c.id === "rovi" ? "On watch on the bridge" : "Resting in the mess hall";
   }
 
   // ---------- pętla ----------
@@ -1024,7 +1023,7 @@
     var r = R[k], z = Math.min(sw / (r.w * 1.35), sh / (r.h * 2.1)) / S0;
     follow = null; camT.zoom = Math.max(1.3, Math.min(ZMAX, z)); camT.x = r.x + r.w / 2; camT.y = r.y + r.h / 2 - 6; clampCam(camT);
     var n = chars.filter(function (c) { return roomKey(c) === k; }).length;
-    toast(ROOM_TXT[k] + " · na pokładzie: " + n); blip(660, .06, "sine", .04);
+    toast(ROOM_TXT[k] + " · crew here: " + n); blip(660, .06, "sine", .04);
   }
   function fitView() { follow = null; camT.zoom = 1; camT.x = (BX0 + BX1) / 2; camT.y = (BY0 + BY1) / 2; clampCam(camT); }
   var toastT = 0; function toast(s, ms, cls) { var el = $("#toast"); el.textContent = s; el.className = "toast on" + (cls ? " " + cls : ""); clearTimeout(toastT); toastT = setTimeout(function () { el.classList.remove("on"); }, ms || 2200); }
@@ -1037,7 +1036,7 @@
   function select(c) {
     follow = c; camT.zoom = Math.max(camT.zoom, 2.3); c.hl = tNow + 1.5;
     focusEl.hidden = false; focusEl.classList.remove("on"); void focusEl.offsetWidth; focusEl.classList.add("on");
-    $("#fAv").src = AV[c.id]; $("#fName").textContent = c.d.imie; $("#fRole").textContent = c.d.rola; $("#fRef").textContent = "AKTA NR " + pad2(c.n) + " · " + (c.d.sekcja || "ZAŁOGA");
+    $("#fAv").src = AV[c.id]; $("#fName").textContent = c.d.imie; $("#fRole").textContent = c.d.rola; $("#fRef").textContent = "FILE NO. " + pad2(c.n) + " · " + (c.d.sekcja || "CREW");
     var s = status(c.id); $("#fSt").className = "light " + stClass(s); $("#fStT").textContent = stLabel(s);
     refreshFocus(); clearInterval(focusT); focusT = setInterval(refreshFocus, 500);
     blip(voice(c.id), .08, "sine", .05); markRoster();
@@ -1051,7 +1050,7 @@
   var sheet = $("#sheet"), body = $("#sheetBody");
   var sheetTimer = 0;
   function open(html, cls, strip) {
-    strip = strip || ["KALLICHORE-7 · RAPORT INCYDENTU", "BLUE MOLD"];
+    strip = strip || ["KALLICHORE-7 · INCIDENT REPORT", "BLUE MOLD"];
     $("#sheetL").textContent = strip[0]; $("#sheetR").textContent = strip[1];
     clearInterval(sheetTimer); body.innerHTML = html; sheet.className = "sheet " + (cls || ""); sheet.hidden = false; sheet.querySelector(".sheet-in").scrollTop = 0; blip(520, .05, "triangle", .04);
   }
@@ -1061,7 +1060,7 @@
   sheet.addEventListener("click", function (e) { if (e.target === sheet) close(); });
   $("#radioH").onclick = function () { $("#radio").classList.toggle("open"); blip(440, .05, "triangle", .03); };
 
-  function stLabel(s) { return { "pauza": "PAUZA", "na prośbę": "NA PROŚBĘ", "aktywny": "AKTYWNY", "wolne": "WOLNE" }[s] || String(s).toUpperCase(); }
+  function stLabel(s) { return { "pauza": "PAUSED", "na prośbę": "ON CALL", "aktywny": "ON DUTY", "wolne": "OFF DUTY" }[s] || String(s).toUpperCase(); }
   function stClass(s) { return s === "na prośbę" ? "na" : s; }
   function pad2(n) { return ("0" + n).slice(-2); }
   function pad3(n) { return ("00" + n).slice(-3); }
@@ -1070,36 +1069,36 @@
     while (x < 96) { var w = r() < .35 ? 2 : 1, gap = r() < .3 ? 2 : 1; out += '<rect x="' + x + '" y="0" width="' + w + '" height="14"/>'; x += w + gap; }
     return '<svg class="bc" viewBox="0 0 96 14" preserveAspectRatio="none" aria-hidden="true">' + out + '</svg>';
   }
-  function stampTxt(s) { return SIM ? "SYMULACJA" : stLabel(s); }
+  function stampTxt(s) { return SIM ? "SIMULATION" : stLabel(s); }
   function stampCls(s) { return SIM ? "sim" : stClass(s); }
   function dossier(id) {
     var c = byId[id], d = c.d, s = status(id), st = (STAN.dzialy || {})[id] || {}, o = st.ostatnio, num = pad2(c.n), tot = pad2(chars.length);
-    var por = id === "rovi" ? '<img src="' + ROVI_IMG + '" alt="Skan: Rovi Here">' : '<canvas id="por" width="320" height="320" aria-label="Skan: ' + esc(d.imie) + '"></canvas>';
+    var por = id === "rovi" ? '<img src="' + ROVI_IMG + '" alt="Scan: Rovi Here">' : '<canvas id="por" width="320" height="320" aria-label="Scan: ' + esc(d.imie) + '"></canvas>';
     var rel = (d.relacje || []).map(function (r) { return '<tr><th>' + esc(r[0]) + '</th><td>' + esc(r[1]) + '</td></tr>'; }).join("");
-    var att = id === "ksiazka" ? '<section class="pf-s"><h4>Załącznik B · okładka Tomu 1</h4><figure class="att"><img src="grafika/okladka-pl.webp" alt="Okładka książki Błękitna Pleśń, Tom 1" loading="lazy"><figcaption>„Błękitna Pleśń”, Tom 1 · Cal Rennick<br><span>wydanie polskie · w przygotowaniu</span></figcaption></figure></section>' : '';
+    var att = id === "ksiazka" ? '<section class="pf-s"><h4>Attachment B · cover of Volume 1</h4><figure class="att"><img src="grafika/okladka-pl.webp" alt="Cover of the book Blue Mold, Volume 1 (Polish edition)" loading="lazy"><figcaption>\u201cBlue Mold\u201d, Volume 1 · Cal Rennick<br><span>Polish edition cover shown · English edition coming soon</span></figcaption></figure></section>' : '';
     open('<article class="pf">' +
-      '<header class="pf-bar"><span>AKTA OSOBOWE · NR ' + num + '</span><span>' + esc(d.sekcja || "ZAŁOGA") + '</span></header>' +
+      '<header class="pf-bar"><span>PERSONNEL FILE · NO. ' + num + '</span><span>' + esc(d.sekcja || "CREW") + '</span></header>' +
       '<div class="pf-head">' +
-        '<figure class="scanf"><div class="scan-top"><span>SKAN · KX7-P-' + pad3(c.n) + '</span><span>KX7/BM</span></div>' + por +
+        '<figure class="scanf"><div class="scan-top"><span>SCAN · KX7-P-' + pad3(c.n) + '</span><span>KX7/BM</span></div>' + por +
           '<figcaption><span><b>' + esc(d.imie.toUpperCase()) + '</b><small>' + esc(d.rola.toUpperCase()) + '</small></span>' + barcode(id) + '</figcaption>' +
           '<span class="stamp ' + stampCls(s) + '">' + stampTxt(s) + '</span></figure>' +
-        '<div class="pf-id"><p class="ref">SYGN. AO-2189-' + pad3(c.n) + '</p><span class="seal">' + esc(d.inicjaly || d.imie.slice(0, 2).toUpperCase()) + '</span>' +
+        '<div class="pf-id"><p class="ref">REF. PF-2189-' + pad3(c.n) + '</p><span class="seal">' + esc(d.inicjaly || d.imie.slice(0, 2).toUpperCase()) + '</span>' +
           '<h2>' + esc(d.imie) + '</h2><p class="role">' + esc(d.rola) + '</p>' +
-          '<dl class="rows"><dt>Status</dt><dd><i class="light ' + stClass(s) + '"></i>' + stLabel(s) + (SIM ? ' · symulacja' : '') + '</dd>' +
-          '<dt>Stanowisko</dt><dd>' + esc(id === "mostek" ? "Mostek dowodzenia · Węzeł · Reaktor" : (ROOM_TXT[d.pokoj] || d.pokoj)) + '</dd>' +
-          '<dt>Tryb</dt><dd>' + esc(d.tryb || "-") + '</dd>' +
-          '<dt>Teraz</dt><dd id="pfNow">' + esc(doing(c)) + '</dd></dl></div>' +
+          '<dl class="rows"><dt>Status</dt><dd><i class="light ' + stClass(s) + '"></i>' + stLabel(s) + (SIM ? ' · simulation' : '') + '</dd>' +
+          '<dt>Station</dt><dd>' + esc(id === "mostek" ? "Command bridge · Comms node · Reactor" : (ROOM_TXT[d.pokoj] || d.pokoj)) + '</dd>' +
+          '<dt>Mode</dt><dd>' + esc(d.tryb || "-") + '</dd>' +
+          '<dt>Now</dt><dd id="pfNow">' + esc(doing(c)) + '</dd></dl></div>' +
       '</div>' +
-      '<section class="pf-s"><h4>Zakres obowiązków</h4><p>' + esc(d.opis) + '</p></section>' +
-      '<section class="pf-s"><h4>Profil</h4><p>' + esc(d.persona) + '</p></section>' +
-      (d.cechy && d.cechy.length ? '<section class="pf-s"><h4>Cechy</h4><ul class="traits">' + d.cechy.map(function (t) { return '<li>' + esc(t) + '</li>'; }).join("") + '</ul></section>' : '') +
-      (rel ? '<section class="pf-s"><h4>Relacje</h4><table class="rel">' + rel + '</table></section>' : '') +
-      '<section class="pf-s"><h4>Ostatni ślad w plikach</h4>' + (o || st.notatka ? '<table class="rel trace">' + (o ? '<tr><th>Plik</th><td class="path">' + esc(o.plik) + '</td></tr><tr><th>Zmieniono</th><td>' + esc(o.data) + '</td></tr>' : '') + (st.notatka ? '<tr><th>Notatka</th><td>' + esc(st.notatka) + '</td></tr>' : '') + '</table>' : '<p class="dim">brak danych w plikach</p>') + '</section>' +
+      '<section class="pf-s"><h4>Duties</h4><p>' + esc(d.opis) + '</p></section>' +
+      '<section class="pf-s"><h4>Profile</h4><p>' + esc(d.persona) + '</p></section>' +
+      (d.cechy && d.cechy.length ? '<section class="pf-s"><h4>Traits</h4><ul class="traits">' + d.cechy.map(function (t) { return '<li>' + esc(t) + '</li>'; }).join("") + '</ul></section>' : '') +
+      (rel ? '<section class="pf-s"><h4>Relations</h4><table class="rel">' + rel + '</table></section>' : '') +
+      (o || st.notatka ? '<section class="pf-s"><h4>Last trace (private status file)</h4><table class="rel trace">' + (o ? '<tr><th>File</th><td class="path">' + esc(o.plik) + '</td></tr><tr><th>Changed</th><td>' + esc(o.data) + '</td></tr>' : '') + (st.notatka ? '<tr><th>Note</th><td>' + esc(st.notatka) + '</td></tr>' : '') + '</table></section>' : '') +
       att +
-      '<blockquote class="pf-q"><p>' + esc(d.tekst) + '</p><cite>Dziennik pokładowy · Blue Mold</cite></blockquote>' +
-      '<footer class="pf-foot"><span>KARTA POSTACI · ' + num + '/' + tot + '</span><span>DOSTĘP: POZIOM 2 · JAWNE</span></footer>' +
-      '<div class="row"><button class="btn" id="dFollow" type="button"><svg><use href="#i-scan"/></svg>Śledź kamerą</button><button class="btn g" id="dSend" type="button"><svg><use href="#i-ufo"/></svg>Nadaj do: ' + esc(d.krotko || d.imie) + '</button><button class="btn g" id="dClose" type="button">Zamknij</button></div>' +
-      '</article>', "wide", ["KALLICHORE-7 · AKTA", "SYGN. AO-2189-" + pad3(c.n)]);
+      '<blockquote class="pf-q"><p>' + esc(d.tekst) + '</p><cite>Ship\'s log · Blue Mold</cite></blockquote>' +
+      '<footer class="pf-foot"><span>CHARACTER CARD · ' + num + '/' + tot + '</span><span>ACCESS: LEVEL 2 · DECLASSIFIED</span></footer>' +
+      '<div class="row"><button class="btn" id="dFollow" type="button"><svg><use href="#i-scan"/></svg>Follow with camera</button><button class="btn g" id="dSend" type="button"><svg><use href="#i-ufo"/></svg>Transmit to: ' + esc(d.krotko || d.imie) + '</button><button class="btn g" id="dClose" type="button">Close</button></div>' +
+      '</article>', "wide", ["KALLICHORE-7 · FILES", "REF. PF-2189-" + pad3(c.n)]);
     var cvp = $("#por");
     if (cvp) { var pc = cvp.getContext("2d"); (function anim() { if (sheet.hidden || !document.body.contains(cvp)) return; pc.setTransform(1, 0, 0, 1, 0, 0); pc.clearRect(0, 0, 320, 320); pc.drawImage(portraitLive(id, tNow), 0, 0); requestAnimationFrame(anim); })(); }
     sheetTimer = setInterval(function () { var n = $("#pfNow"); if (n) n.textContent = doing(c); }, 700);
@@ -1119,13 +1118,13 @@
     g.fillStyle = sg; g.fillRect(0, sy - 30, 320, 34);
     return pl;
   }
-  var SEKCJE = ["DOWÓDZTWO", "MEDIA", "ROZWÓJ I NAUKA", "TECHNIKA", "PRYWATNE · NA PROŚBĘ"];
+  var SEKCJE = ["COMMAND", "SIGNALS", "SCIENCE", "ENGINEERING"];
   function crewList() {
     var groups = SEKCJE.slice(); chars.forEach(function (c) { if (groups.indexOf(c.d.sekcja) < 0) groups.push(c.d.sekcja); });
     var nAct = chars.filter(function (c) { return active(c.id); }).length;
-    open('<div class="reg"><div class="banner" style="background-image:url(grafika/kallichore.webp)"><div><small>KX7-2189-0413 · ZAŁĄCZNIK A</small><h2>Rejestr załogi</h2></div></div>' +
-      '<p class="lead">' + chars.length + ' działów Rovi Here na pokładzie Blue Mold. Dotknij akt, aby je otworzyć.</p>' +
-      '<p class="reg-sum"><span>NA POKŁADZIE: ' + chars.length + '</span><span>W PRACY: ' + nAct + '</span><span>' + (SIM ? "SYMULACJA" : (stopped() ? "STOP" : "PRACA")) + '</span></p>' +
+    open('<div class="reg"><div class="banner" style="background-image:url(grafika/kallichore.webp)"><div><small>KX7-2189-0413 · ATTACHMENT A</small><h2>Crew manifest</h2></div></div>' +
+      '<p class="lead">' + chars.length + ' crew members aboard the Blue Mold. Tap a file to open it.</p>' +
+      '<p class="reg-sum"><span>ABOARD: ' + chars.length + '</span><span>ON DUTY: ' + nAct + '</span><span>' + (SIM ? "SIMULATION" : (stopped() ? "STOP" : "ON DUTY")) + '</span></p>' +
       groups.map(function (g) {
         var m = chars.filter(function (c) { return c.d.sekcja === g; }); if (!m.length) return "";
         return '<h4 class="grp">' + esc(g) + '</h4><ul class="reg-l">' + m.map(function (c) {
@@ -1133,29 +1132,29 @@
           return '<li><button type="button" data-id="' + c.id + '"><span class="no">' + pad2(c.n) + '</span><img alt="" src="' + AV[c.id] + '"><span class="nm"><b>' + esc(c.d.imie) + '</b><em>' + esc(c.d.rola) + '</em></span><span class="sm ' + stampCls(s) + '">' + stampTxt(s) + '</span></button></li>';
         }).join("") + '</ul>';
       }).join("") +
-      '<p class="reg-foot"><span>DOK. KX7-2189-0413</span><span>STAN: ' + esc(STAN.aktualizacja || "-") + '</span></p></div>', "wide", ["BLUE MOLD · ZAŁĄCZNIK A", "AKTA OSOBOWE"]);
+      '<p class="reg-foot"><span>DOC. KX7-2189-0413</span><span>' + (STAN.aktualizacja ? "STATUS: " + esc(STAN.aktualizacja) : "FICTIONAL CREW") + '</span></p></div>', "wide", ["BLUE MOLD · ATTACHMENT A", "PERSONNEL FILES"]);
     body.querySelectorAll("[data-id]").forEach(function (b) { b.onclick = function () { dossier(b.getAttribute("data-id")); }; });
   }
   function renderRoster() {
     var ol = $("#rosterList"); if (!ol) return;
     ol.innerHTML = chars.map(function (c) { var s = status(c.id); return '<li><button type="button" data-r="' + c.id + '"' + (follow === c ? ' class="on"' : '') + '><span class="no">' + pad2(c.n) + '</span><img alt="" src="' + AV[c.id] + '"><span class="nm"><b>' + esc(c.d.imie) + '</b><em>' + esc(c.d.rola) + '</em></span><span class="sm ' + stampCls(s) + '">' + stampTxt(s) + '</span></button></li>'; }).join("");
     ol.querySelectorAll("[data-r]").forEach(function (b) { b.onclick = function () { select(byId[b.getAttribute("data-r")]); }; });
-    $("#rosterN").textContent = chars.length + " DZIAŁÓW";
+    $("#rosterN").textContent = chars.length + " CREW";
   }
   var deferred = null;
   window.addEventListener("beforeinstallprompt", function (e) { e.preventDefault(); deferred = e; });
   function sw2(id, on, label, sub) { return '<label class="sw"><span><b>' + label + '</b><small>' + sub + '</small></span><input type="checkbox" id="' + id + '"' + (on ? " checked" : "") + '><i></i></label>'; }
   function info() {
     var f = STAN.firma || {};
-    open('<div class="proto"><div class="banner" style="background-image:url(grafika/gejzer.webp)"><div><small>DOK. KX7-2189-0413 · PROTOKÓŁ</small><h2>Statek Blue Mold</h2></div></div>' +
-      '<section class="panel"><h4>Stan firmy</h4><p>' + (f.stop ? "<b class='red'>STOP</b> – " + esc((f.opis || "").replace(/^STOP\s*/i, "")) + (f.od ? " (od " + esc(f.od) + ")" : "") : "Praca (bez STOP)." + (f.historia ? " " + esc(f.historia) : "")) + '</p><p class="dim">Dane: data/stan.json · aktualizacja: ' + esc(STAN.aktualizacja || "-") + '</p></section>' +
-      '<section class="panel"><h4>Centrum dowodzenia</h4><p>Pulpit (kalendarz publikacji, blokady, stan działów) i formularz poleceń do arkusza „RoviHere Polecenia”.</p><div class="row"><button class="btn g" id="iPulpit" type="button">Pulpit</button><button class="btn g" id="iCmd" type="button">Polecenia</button><button class="btn g" id="iLink" type="button">Łącze z bazą poleceń</button></div></section>' +
-      '<section class="panel"><h4>Struktura załogi · 09.10.2026</h4><p>Dwóch szefów: <b>Rovi Here</b> (X, Profesor, Pomysły, Weryfikator) i <b>Blue Mold</b> (Książka, Suno Rap, YouTube, Technika i Studio, TikTok, aplikacja). <b>Mostek</b> (od 08.10: Koordynacja + Odprawa + Energia) łączy oba zespoły, Novi pilnuje całości.</p></section>' +
-      '<section class="panel"><h4>Ustawienia</h4>' + sw2("tSim", SIM, "Symulacja dnia pracy", "wszyscy aktywni – tylko podgląd, dane bez zmian") + sw2("tSnd", SET.snd, "Dźwięk", "szum statku i sygnały rozmów") + sw2("tCrt", SET.crt, "Filtr CRT", "linie skanowania monitora") + '</section>' +
-      '<section class="panel"><h4>Sterowanie</h4><p>Przeciągnij, aby przesuwać. Szczypnij lub kółkiem – zoom. Dwa stuknięcia w pokój – przybliżenie. Stuknij postać – kamera ją śledzi, a pasek na dole otwiera akta.</p></section>' +
-      '<section class="panel"><h4>Na zewnątrz</h4><p class="links"><a class="btn g" href="https://www.youtube.com/@RoviHere" target="_blank" rel="noopener">YouTube</a><a class="btn g" href="https://www.tiktok.com/@roviheree" target="_blank" rel="noopener">TikTok</a><a class="btn g" href="https://x.com/RoviHere" target="_blank" rel="noopener">X</a><a class="btn g" href="https://suno.com/@kkruk93" target="_blank" rel="noopener">Suno</a></p></section>' +
-      '<section class="panel"><h4>Instalacja</h4><p>Android/Chrome: menu ⋮ → „Zainstaluj aplikację”. iPhone/Safari: Udostępnij → „Do ekranu początkowego”. Wymaga strony na https.</p>' + (deferred ? '<button class="btn" id="inst">Zainstaluj teraz</button>' : '') + '</section>' +
-      '<p class="colophon">Oprawa wizualna według książki „Blue Mold” / „Błękitna Pleśń” (Cal Rennick). Grafiki: okładka i plansze z książki. Kroje: Big Shoulders Display, IBM Plex Mono, EB Garamond (OFL).</p></div>', "wide", ["PROTOKÓŁ STATKU", "DOK. KX7-2189-0413"]);
+    open('<div class="proto"><div class="banner" style="background-image:url(grafika/gejzer.webp)"><div><small>DOC. KX7-2189-0413 · PROTOCOL</small><h2>The ship Blue Mold</h2></div></div>' +
+      '<section class="panel play-panel"><h4>New: Blue Mold: Containment</h4><p>A turn-based puzzle on the deck plan of the freighter <i>Shadow Spark</i>. The blue mold spreads every turn; seal the bulkheads before it reaches the bridge. Twelve case files from the KALLICHORE-7 incident.</p><div class="row"><a class="btn" href="game/">Play Containment</a></div></section>' +
+      (STAN.aktualizacja ? '<section class="panel"><h4>Private status file</h4><p>' + (f.stop ? "<b class='red'>STOP</b>" : "Crew on duty.") + '</p><p class="dim">Imported on this device only · ' + esc(STAN.aktualizacja) + '</p></section>' : '') +
+      '<section class="panel"><h4>Owner tools</h4><p>Dashboard and command form for the ship\'s owner. Commands are sent only after you add your private link (web app URL and token) on this device; nothing private is stored in the app files.</p><div class="row"><button class="btn g" id="iPulpit" type="button">Dashboard</button><button class="btn g" id="iCmd" type="button">Commands</button><button class="btn g" id="iLink" type="button">Link settings</button></div></section>' +
+      '<section class="panel"><h4>Settings</h4>' + sw2("tSim", SIM, "Simulate a work day", "everyone on duty – preview only") + sw2("tSnd", SET.snd, "Sound", "ship hum and chatter blips") + sw2("tCrt", SET.crt, "CRT filter", "monitor scan lines") + '</section>' +
+      '<section class="panel"><h4>Controls</h4><p>Drag to pan. Pinch or use the mouse wheel to zoom. Double-tap a room to zoom in. Tap a crew member to follow them; the bar at the bottom opens their file.</p></section>' +
+      '<section class="panel"><h4>Outside</h4><p class="links"><a class="btn g" href="https://www.youtube.com/@RoviHere" target="_blank" rel="noopener">YouTube</a><a class="btn g" href="https://www.tiktok.com/@roviheree" target="_blank" rel="noopener">TikTok</a><a class="btn g" href="https://x.com/RoviHere" target="_blank" rel="noopener">X</a><a class="btn g" href="https://suno.com/@kkruk93" target="_blank" rel="noopener">Suno</a></p></section>' +
+      '<section class="panel"><h4>Install</h4><p>Android/Chrome: menu ⋮ → “Install app”. iPhone/Safari: Share → “Add to Home Screen”. Requires https.</p>' + (deferred ? '<button class="btn" id="inst">Install now</button>' : '') + '</section>' +
+      '<p class="colophon">Visual style based on the book “Blue Mold” by Cal Rennick. Art: cover and plates from the book. Typefaces: Big Shoulders Display, IBM Plex Mono, EB Garamond (SIL Open Font License). <a href="game/privacy.html">Privacy</a></p></div>', "wide", ["SHIP PROTOCOL", "DOC. KX7-2189-0413"]);
     $("#tSim").onchange = function () { setSim(this.checked); };
     $("#tSnd").onchange = function () { setSound(this.checked); };
     $("#tCrt").onchange = function () { setCrt(this.checked); };
@@ -1167,7 +1166,7 @@
     SIM = v; scenes.slice().forEach(function (sc) { sc.parts.forEach(function (p) { p.scene = null; p.bubble = null; }); }); scenes = []; recent = [];
     assignHomes(); chars.forEach(function (c) { c.sleeping = false; c.task = null; route(c, c.home); });
     buildStatic(); chip(); renderRoster();
-    radio(null, null, v ? "Symulacja: zwykły dzień pracy (podgląd, dane bez zmian)." : "Powrót do stanu rzeczywistego.");
+    radio(null, null, v ? "Simulation: an ordinary work day (preview only)." : "Back to the real status.");
   }
   $("#btnZaloga").onclick = crewList;
   $("#btnInfo").onclick = info;
@@ -1175,11 +1174,11 @@
 
   var chipS = $("#chipStan"), chipC = $("#chipCzas");
   function chip() {
-    if (SIM) { chipS.innerHTML = "<i></i>SYMULACJA"; chipS.className = "st sim"; }
+    if (SIM) { chipS.innerHTML = "<i></i>SIMULATION"; chipS.className = "st sim"; }
     else if (stopped()) { chipS.innerHTML = "<i></i>STOP"; chipS.className = "st stop"; }
-    else { chipS.innerHTML = "<i></i>PRACA"; chipS.className = "st ok"; }
-    var nA = chars.filter(function (c) { return active(c.id); }).length; $("#capCrew").textContent = "ZAŁOGA " + chars.length + " · W PRACY " + nA;
-    var n = isNight(); chipC.textContent = (n ? "NOC · " : "DZIEŃ · ") + berlin();
+    else { chipS.innerHTML = "<i></i>ON DUTY"; chipS.className = "st ok"; }
+    var nA = chars.filter(function (c) { return active(c.id); }).length; $("#capCrew").textContent = "CREW " + chars.length + " · ON DUTY " + nA;
+    var n = isNight(); chipC.textContent = (n ? "NIGHT · " : "DAY · ") + berlin();
     if (n !== night) { night = n; buildStatic(); }
   }
   setInterval(chip, 20000);
@@ -1192,8 +1191,8 @@
   function txSave(a) { lsSet(TXK, JSON.stringify(a.slice(-40))); }
   function berlinFull() { try { return new Intl.DateTimeFormat("de-DE", { day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit", hour12: false, timeZone: "Europe/Berlin" }).format(new Date()); } catch (e) { return new Date().toLocaleString(); } }
   function txName(id) { return id === "rovi" ? "Rovi" : (byId[id] ? byId[id].d.imie : String(id)); }
-  function txFormat(to, txt, when) { return "\uD83D\uDEF8 TRANSMISJA DO ROVI (→ " + txName(to) + ")\n" + String(txt).trim() + "\n— z aplikacji Blue Mold, " + when; }
-  var COPIED = "Skopiowano do schowka · wklej w czacie z Rovi Here";
+  function txFormat(to, txt, when) { return "\uD83D\uDEF8 TRANSMISSION TO ROVI (→ " + txName(to) + ")\n" + String(txt).trim() + "\n— from the Blue Mold app, " + when; }
+  var COPIED = "Copied to clipboard · paste it into your chat";
   function copyExec(s) {
     var ta = document.createElement("textarea"), ok = false, act = document.activeElement;
     ta.value = s; ta.setAttribute("readonly", ""); ta.style.cssText = "position:fixed;left:-9999px;top:0;opacity:0;-webkit-user-select:text;user-select:text";
@@ -1216,64 +1215,64 @@
   function copyBox(s) {
     var el = $("#txBox");
     if (!el) { el = document.createElement("div"); el.id = "txBox"; el.className = "txbox"; el.setAttribute("role", "dialog"); document.body.appendChild(el); }
-    el.innerHTML = '<div class="p-strip"><span>KANAŁ UFO · RĘCZNE KOPIOWANIE</span><span>KX7-TX</span></div><h4>Skopiuj ręcznie</h4><p class="dim">Przeglądarka zablokowała schowek. Tekst jest zaznaczony – skopiuj go (Ctrl+C albo przytrzymaj palcem) i wklej w czacie z Rovi Here.</p><textarea readonly></textarea><div class="row"><button class="btn" id="txbCopy" type="button">Kopiuj</button><button class="btn g" id="txbClose" type="button">Gotowe</button></div>';
+    el.innerHTML = '<div class="p-strip"><span>UFO CHANNEL · MANUAL COPY</span><span>KX7-TX</span></div><h4>Copy manually</h4><p class="dim">The browser blocked the clipboard. The text is selected – copy it (Ctrl+C or long-press) and paste it into your chat.</p><textarea readonly></textarea><div class="row"><button class="btn" id="txbCopy" type="button">Copy</button><button class="btn g" id="txbClose" type="button">Done</button></div>';
     var ta = el.querySelector("textarea"); ta.value = s; el.hidden = false;
     setTimeout(function () { try { ta.focus(); ta.select(); ta.setSelectionRange(0, s.length); } catch (e) {} }, 40);
     $("#txbCopy").onclick = function () {
       var ok = false; try { ta.focus(); ta.select(); ta.setSelectionRange(0, s.length); ok = document.execCommand("copy"); } catch (e) {}
       if (ok) { COPY.last = "exec"; toast(COPIED, 4500, "big"); el.hidden = true; return; }
-      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(s).then(function () { COPY.last = "clipboard"; toast(COPIED, 4500, "big"); el.hidden = true; }, function () { toast("Tekst zaznaczony – użyj Ctrl+C / Kopiuj z menu", 3500); });
-      else toast("Tekst zaznaczony – użyj Ctrl+C / Kopiuj z menu", 3500);
+      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(s).then(function () { COPY.last = "clipboard"; toast(COPIED, 4500, "big"); el.hidden = true; }, function () { toast("Text selected – use Ctrl+C / Copy from the menu", 3500); });
+      else toast("Text selected – use Ctrl+C / Copy from the menu", 3500);
     };
     $("#txbClose").onclick = function () { el.hidden = true; };
   }
   var QUICK = [
-    ["Co dziś robimy?", function () { return "Co dziś robimy?"; }],
-    ["Raport załogi", function () { return "Poproszę raport załogi: kto nad czym pracuje, co stoi i dlaczego."; }],
-    ["Wznów dział", function (to) { return "Wznów dział: " + (to === "rovi" ? "[który?]" : txName(to)) + "."; }],
-    ["Nowy pomysł", function () { return "Nowy pomysł: "; }]
+    ["What's today's plan?", function () { return "What's today's plan?"; }],
+    ["Crew report", function () { return "Crew report, please: who is working on what, what is blocked and why."; }],
+    ["Resume station", function (to) { return "Resume station: " + (to === "rovi" ? "[which one?]" : txName(to)) + "."; }],
+    ["New idea", function () { return "New idea: "; }]
   ];
   function txLogHtml(log) {
     if (!log.length) return "";
     var items = log.map(function (e, i) { return { e: e, i: i }; }).slice(-5).reverse();
-    return '<section class="tx-s"><h4><span class="n">05</span>Dziennik transmisji <small>tylko na tym urządzeniu</small></h4><ul class="tx-log">' + items.map(function (o) {
-      return '<li><div class="h"><b>→ ' + esc(txName(o.e.to)) + '</b><span>' + esc(o.e.w) + '</span></div><p>' + esc(o.e.txt) + '</p><button type="button" data-c="' + o.i + '">kopiuj ponownie</button></li>';
-    }).join("") + '</ul><button class="btn g small" id="txClear" type="button">Wyczyść dziennik</button></section>';
+    return '<section class="tx-s"><h4><span class="n">05</span>Transmission log <small>this device only</small></h4><ul class="tx-log">' + items.map(function (o) {
+      return '<li><div class="h"><b>→ ' + esc(txName(o.e.to)) + '</b><span>' + esc(o.e.w) + '</span></div><p>' + esc(o.e.txt) + '</p><button type="button" data-c="' + o.i + '">copy again</button></li>';
+    }).join("") + '</ul><button class="btn g small" id="txClear" type="button">Clear log</button></section>';
   }
   function composer(preset) {
     if (preset && (preset === "rovi" || byId[preset])) txTo = preset;
     var log = txLoad();
-    open('<div class="tx"><div class="tx-head"><div><small class="kicker">FORMULARZ TRANSMISJI · KX7-TX</small><h2 class="sh-title">Nadaj do Rovi</h2><p class="lead">Treść trafia do schowka, a Ty wklejasz ją w czacie z Rovi Here.</p></div><span class="tx-ico" aria-hidden="true"><svg><use href="#i-ufo"/></svg></span></div>' +
-      '<section class="tx-s"><h4><span class="n">01</span>Odbiorca</h4><div class="tx-to" id="txTo">' + chars.map(function (c) { return '<button type="button" data-to="' + c.id + '"' + (c.id === txTo ? ' class="on"' : '') + '><img alt="" src="' + AV[c.id] + '"><span>' + esc(c.id === "rovi" ? "Rovi" : (c.d.krotko || c.d.imie)) + '</span></button>'; }).join("") + '</div></section>' +
-      '<section class="tx-s"><h4><span class="n">02</span>Szybkie rozkazy</h4><div class="tx-q">' + QUICK.map(function (q, i) { return '<button type="button" data-q="' + i + '">' + esc(q[0]) + '</button>'; }).join("") + '</div></section>' +
-      '<section class="tx-s"><h4><span class="n">03</span>Treść</h4><div class="tx-area"><textarea id="txT" maxlength="1200" rows="4" placeholder="Rozkaz albo wiadomość dla Rovi…"></textarea><span id="txN">0/1200</span></div></section>' +
-      '<section class="tx-s"><h4><span class="n">04</span>Podgląd transmisji</h4><div class="tx-prev"><pre id="txP"></pre></div></section>' +
-      '<div class="row tx-go"><button class="btn big" id="txGo" type="button" disabled><svg><use href="#i-ufo"/></svg>Nadaj transmisję</button><button class="btn g" id="txCancel" type="button">Anuluj</button></div>' +
-      '<p class="dim note">Aplikacja nie łączy się z Rovi i niczego nie wysyła w sieć. Animacja na statku tylko potwierdza nadanie – prawdziwa odpowiedź przyjdzie w czacie.</p>' +
-      txLogHtml(log) + '</div>', "wide tx-sheet", ["KANAŁ UFO · TRANSMISJA", "SZYFR KX7-TX"]);
+    open('<div class="tx"><div class="tx-head"><div><small class="kicker">TRANSMISSION FORM · KX7-TX</small><h2 class="sh-title">Transmit to Rovi</h2><p class="lead">The text goes to your clipboard; paste it into your chat.</p></div><span class="tx-ico" aria-hidden="true"><svg><use href="#i-ufo"/></svg></span></div>' +
+      '<section class="tx-s"><h4><span class="n">01</span>Recipient</h4><div class="tx-to" id="txTo">' + chars.map(function (c) { return '<button type="button" data-to="' + c.id + '"' + (c.id === txTo ? ' class="on"' : '') + '><img alt="" src="' + AV[c.id] + '"><span>' + esc(c.id === "rovi" ? "Rovi" : (c.d.krotko || c.d.imie)) + '</span></button>'; }).join("") + '</div></section>' +
+      '<section class="tx-s"><h4><span class="n">02</span>Quick orders</h4><div class="tx-q">' + QUICK.map(function (q, i) { return '<button type="button" data-q="' + i + '">' + esc(q[0]) + '</button>'; }).join("") + '</div></section>' +
+      '<section class="tx-s"><h4><span class="n">03</span>Message</h4><div class="tx-area"><textarea id="txT" maxlength="1200" rows="4" placeholder="An order or a message for Rovi…"></textarea><span id="txN">0/1200</span></div></section>' +
+      '<section class="tx-s"><h4><span class="n">04</span>Transmission preview</h4><div class="tx-prev"><pre id="txP"></pre></div></section>' +
+      '<div class="row tx-go"><button class="btn big" id="txGo" type="button" disabled><svg><use href="#i-ufo"/></svg>Transmit</button><button class="btn g" id="txCancel" type="button">Cancel</button></div>' +
+      '<p class="dim note">This channel sends nothing over the network. The animation only confirms the transmission – the real reply arrives in your chat.</p>' +
+      txLogHtml(log) + '</div>', "wide tx-sheet", ["UFO CHANNEL · TRANSMISSION", "CIPHER KX7-TX"]);
     var ta = $("#txT"), go = $("#txGo"), pv = $("#txP"), n = $("#txN");
     function upd() { var v = ta.value; n.textContent = v.length + "/1200"; go.disabled = !v.trim(); pv.innerHTML = esc(txFormat(txTo, v.trim() || "…", berlinFull())).replace("\uD83D\uDEF8", '<svg><use href="#i-ufo"/></svg>'); }
     ta.oninput = upd;
     body.querySelectorAll("[data-to]").forEach(function (b) { b.onclick = function () { txTo = b.getAttribute("data-to"); body.querySelectorAll("[data-to]").forEach(function (o) { o.classList.toggle("on", o === b); }); blip(voice(txTo), .05, "sine", .04); upd(); }; });
     body.querySelectorAll("[data-q]").forEach(function (b) { b.onclick = function () { ta.value = QUICK[+b.getAttribute("data-q")][1](txTo); upd(); ta.focus(); try { ta.setSelectionRange(ta.value.length, ta.value.length); } catch (e) {} blip(600, .04, "triangle", .03); }; });
     body.querySelectorAll("[data-c]").forEach(function (b) { b.onclick = function () { var e = txLoad()[+b.getAttribute("data-c")]; if (e) copyText(txFormat(e.to, e.txt, e.w)); }; });
-    var cl = $("#txClear"); if (cl) cl.onclick = function () { txSave([]); feedEl.querySelectorAll("li.ufo").forEach(function (li) { li.remove(); }); composer(); toast("Dziennik wyczyszczony"); };
+    var cl = $("#txClear"); if (cl) cl.onclick = function () { txSave([]); feedEl.querySelectorAll("li.ufo").forEach(function (li) { li.remove(); }); composer(); toast("Log cleared"); };
     go.onclick = function () { if (ta.value.trim()) transmit(txTo, ta.value); };
     $("#txCancel").onclick = close;
     upd();
   }
   function radioTx(e, old) {
     var li = document.createElement("li"); li.className = "ufo";
-    li.innerHTML = '<span class="sys ufo"><svg><use href="#i-ufo"/></svg></span><div class="rb"><div class="meta"><b>TRANSMISJA</b> <i>→ ' + esc(txName(e.to)) + '</i><span class="t">' + esc(e.w) + '</span></div><div class="m">' + esc(e.txt) + '</div><button class="recopy" type="button">kopiuj ponownie</button></div>';
+    li.innerHTML = '<span class="sys ufo"><svg><use href="#i-ufo"/></svg></span><div class="rb"><div class="meta"><b>TRANSMISSION</b> <i>→ ' + esc(txName(e.to)) + '</i><span class="t">' + esc(e.w) + '</span></div><div class="m">' + esc(e.txt) + '</div><button class="recopy" type="button">copy again</button></div>';
     li.querySelector(".recopy").onclick = function (ev) { ev.stopPropagation(); copyText(txFormat(e.to, e.txt, e.w)); };
     feedEl.insertBefore(li, feedEl.firstChild);
-    if (!old) { lastEl.textContent = "Transmisja → " + txName(e.to) + ": " + e.txt; lastAv.src = AV.rovi; }
+    if (!old) { lastEl.textContent = "Transmission → " + txName(e.to) + ": " + e.txt; lastAv.src = AV.rovi; }
   }
   function transmit(to, txt) {
     var when = berlinFull(), clean = String(txt).trim(), s = txFormat(to, clean, when);
     copyText(s);
     var e = { w: when, to: to, txt: clean }, log = txLoad(); log.push(e); txSave(log);
-    radioTx(e); close(); launchUfo(to); bigStamp("NADANO", "KX7 · TX · " + when.slice(-5) + " · → " + txName(to).toUpperCase());
+    radioTx(e); close(); launchUfo(to); bigStamp("SENT", "KX7 · TX · " + when.slice(-5) + " · → " + txName(to).toUpperCase());
   }
   var stampT = 0;
   function bigStamp(txt, sub) {
@@ -1289,7 +1288,7 @@
     var rovi = byId.rovi, tgt = (to === "rovi" ? byId.mostek : byId[to]) || byId.mostek;
     [rovi, tgt].forEach(function (c) {
       if (c.scene) { var sc = c.scene; sc.parts.forEach(function (p) { p.scene = null; p.bubble = null; if (p !== rovi && p !== tgt && !atHome(p)) route(p, p.home); }); var ix = scenes.indexOf(sc); if (ix >= 0) scenes.splice(ix, 1); }
-      c.bubble = null; c.sleeping = false; c.path = []; c.task = { stage: "ufo", label: c === rovi ? "odbiera transmisję" : "czeka na decyzję z czatu" };
+      c.bubble = null; c.sleeping = false; c.path = []; c.task = { stage: "ufo", label: c === rovi ? "receiving a transmission" : "waiting for a decision from the chat" };
     });
     if (follow) unselect();
     UFO = { t0: tNow, to: to, tgt: tgt, saved: { x: camT.x, y: camT.y, zoom: camT.zoom }, cam: true, x: UP[0][0], y: UP[0][1], tilt: 0, beam: 0, cap: null, flash: -9, trail: [], ev: {} };
@@ -1319,11 +1318,11 @@
     function once(k, at, fn) { if (T >= at && !u.ev[k]) { u.ev[k] = 1; fn(); } }
     once("seen", 3.2, function () { emote(rovi, "!", 1.8); route(rovi, CONSOLE); blip(660, .08, "sine", .05); });
     once("land", 5, function () { u.flash = tNow; rovi.face = 1; blip(880, .14, "sine", .06); setTimeout(function () { blip(1320, .16, "sine", .05); }, 110); });
-    once("ack", 5.25, function () { var t = "Odebrałem transmisję" + (u.to === "rovi" ? "" : " dla: " + txName(u.to)) + ". Odpowiedź przyjdzie w czacie Rovi Here."; say(rovi, t, 3.9); radio("rovi", null, t); });
+    once("ack", 5.25, function () { var t = "Transmission received" + (u.to === "rovi" ? "" : " for " + txName(u.to)) + ". The reply will come in the chat."; say(rovi, t, 3.9); radio("rovi", null, t); });
     once("back", 6.8, function () { if (u.cam) { camT.x = u.saved.x; camT.y = u.saved.y; camT.zoom = u.saved.zoom; clampCam(camT); } u.cam = false; });
-    once("relay", 9.3, function () { var t = "Przekazuję: " + u.tgt.d.imie + ". Decyzja zapadnie w czacie."; say(rovi, t, 3.2); radio("rovi", u.tgt.id, t); });
+    once("relay", 9.3, function () { var t = "Relaying to " + u.tgt.d.imie + ". The decision will be made in the chat."; say(rovi, t, 3.2); radio("rovi", u.tgt.id, t); });
     once("tgt", 10.4, function () { emote(u.tgt, "!", 1.6); u.tgt.face = 1; });
-    once("tgtSay", 11, function () { var t = "Przyjąłem. Czekam na decyzję z czatu."; say(u.tgt, t, 3.2); radio(u.tgt.id, "rovi", t); });
+    once("tgtSay", 11, function () { var t = "Copy that. Waiting for the decision."; say(u.tgt, t, 3.2); radio(u.tgt.id, "rovi", t); });
     once("end", 14.6, releaseUfo);
     if (UFO && u.cam && T < 6.8) {
       var zz = Math.min(ZMAX, Math.max(1.6, Math.min(2.3, (sw / S0) / 150)));
@@ -1375,21 +1374,17 @@
   // ---------- ekran startowy ----------
   function boot() {
     var el = $("#boot"), log = $("#bootLog"), bar = $("#bootBar"), done = false;
-    var lines = ["BLUE MOLD · SYSTEM POKŁADOWY", "rdzeń reaktora ............ OK", "kultura pleśni ............ stabilna, świeci", "akta załogi ............... " + chars.length + " teczek"];
+    var lines = ["BLUE MOLD · SHIP SYSTEMS", "reactor core .............. OK", "mold culture .............. stable, glowing", "crew files ................ " + chars.length + " folders"];
     chars.forEach(function (c) { lines.push("  " + (active(c.id) ? "●" : "○") + " " + pad2(c.n) + " " + c.d.imie + " — " + stLabel(status(c.id)).toLowerCase()); });
-    lines.push("kanał UFO · KX7-TX ......... gotowy", stopped() ? "STATUS: STOP (decyzja użytkownika)" : "STATUS: załoga na stanowiskach");
+    lines.push("UFO channel · KX7-TX ....... ready", "containment drills ........ 12 case files", stopped() ? "STATUS: STOP" : "STATUS: crew on stations");
     var i = 0;
     el.classList.add("go");
     function next() { if (done) return; if (i < lines.length) { var d = document.createElement("div"); d.textContent = lines[i]; if (i === 0) d.className = "h"; if (/STATUS: STOP/.test(lines[i])) d.className = "r"; log.appendChild(d); while (log.children.length > 6) log.removeChild(log.firstChild); i++; bar.style.width = Math.round(i / lines.length * 100) + "%"; setTimeout(next, i < 4 ? 240 : 95); } else setTimeout(finish, 900); }
-    function finish() { if (done) return; done = true; el.classList.add("out"); setTimeout(function () { el.hidden = true; }, 800); radio(null, null, stopped() ? "STOP: cała załoga ma pauzę (decyzja użytkownika). Pomysły i Profesor pracują na prośbę." : "Załoga na stanowiskach."); }
+    function finish() { if (done) return; done = true; el.classList.add("out"); setTimeout(function () { el.hidden = true; }, 800); radio(null, null, stopped() ? "STOP: the whole crew is resting." : "Crew on stations. New: containment drills in the Protocol (⚙)."); }
     el.addEventListener("click", finish); setTimeout(next, 500);
   }
 
-  // świeższy stan z sieci (gdy strona jest hostowana; na file:// zostaje data/stan.js)
   if (location.protocol.indexOf("http") === 0) {
-    fetch("data/stan.json", { cache: "no-cache" }).then(function (r) { return r.ok ? r.json() : null; }).then(function (j) {
-      if (j && j.aktualizacja && j.aktualizacja !== STAN.aktualizacja) { STAN = j; assignHomes(); chars.forEach(function (c) { if (!c.scene) route(c, c.home); }); buildStatic(); chip(); renderRoster(); try { document.dispatchEvent(new CustomEvent("bm-stan")); } catch (e) {} }
-    }).catch(function () {});
     if ("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js").catch(function () {});
   }
 

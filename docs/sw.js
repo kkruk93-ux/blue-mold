@@ -1,28 +1,30 @@
-/* Service worker Blue Mold – działa w podkatalogu (np. https://<login>.github.io/blue-mold/), bo wszystkie ścieżki są względne
-   wobec położenia sw.js (scope = katalog aplikacji).
-   - Backend poleceń (Google Apps Script, inne domeny) i każde żądanie inne niż GET: NIGDY nie przechodzą przez cache.
-   - data/* (stan.json, stan.js): najpierw sieć, cache tylko awaryjnie offline.
-   - Reszta plików aplikacji: najpierw cache (offline).
-   Przy każdej zmianie plików aplikacji podbij CACHE – stara wersja zostanie usunięta przy aktywacji. */
-var CACHE = "bluemold-v7-centrum";
-var PLIKI = ["./", "index.html", "style.css", "app.js", "centrum.js", "manifest.webmanifest", "data/zaloga.js", "data/stan.js", "data/stan.json",
-  "ikony/ikona-192.png", "ikony/ikona-512.png", "ikony/apple-touch-icon.png",
+/* Blue Mold service worker. Works in a sub-folder (e.g. https://<user>.github.io/blue-mold/) because every path
+   is relative to sw.js (scope = the app folder).
+   - The command backend (Google Apps Script, other origins) and every non-GET request NEVER go through the cache.
+   - data/*: network first, cache only as an offline fallback.
+   - game/*: handled by the game's own service worker (game/sw.js), ignored here.
+   - Everything else: cache first (offline).
+   Bump CACHE whenever app files change - the old cache is deleted on activation. */
+var CACHE = "bluemold-v8";
+var PLIKI = ["./", "index.html", "style.css", "app.js", "centrum.js", "manifest.webmanifest", "data/crew.js",
+  "ikony/ikona-192.png", "ikony/ikona-512.png", "ikony/maskable-192.png", "ikony/maskable-512.png", "ikony/apple-touch-icon.png",
   "fonts/BigShouldersDisplay-var.woff2", "fonts/IBMPlexMono-Regular-Latin1.woff2", "fonts/IBMPlexMono-Regular-Latin2.woff2",
   "fonts/IBMPlexMono-Medium-Latin1.woff2", "fonts/IBMPlexMono-Medium-Latin2.woff2", "fonts/IBMPlexMono-Regular-Pi.woff2",
   "fonts/EBGaramond-Regular.woff2", "fonts/EBGaramond-SemiBold.woff2", "fonts/EBGaramond-Italic.woff2",
-  "grafika/enceladus.webp", "grafika/kallichore.webp", "grafika/gejzer.webp", "grafika/schemat.webp", "grafika/okladka-pl.webp",
+"grafika/enceladus.webp", "grafika/kallichore.webp", "grafika/gejzer.webp", "grafika/schemat.webp", "grafika/okladka-pl.webp",
   "grafika/rovi-skan.webp", "grafika/szum.png", "grafika/plesn-l.svg", "grafika/plesn-r.svg"];
-var BAZA = new URL("./", self.location).pathname;   // np. "/blue-mold/"
+var BAZA = new URL("./", self.location).pathname;   // e.g. "/blue-mold/"
 self.addEventListener("install", function (e) { e.waitUntil(caches.open(CACHE).then(function (c) { return c.addAll(PLIKI); }).then(function () { return self.skipWaiting(); })); });
 self.addEventListener("activate", function (e) {
   e.waitUntil(caches.keys().then(function (k) { return Promise.all(k.filter(function (n) { return n.indexOf("bluemold-") === 0 && n !== CACHE; }).map(function (n) { return caches.delete(n); })); }).then(function () { return self.clients.claim(); }));
 });
 self.addEventListener("fetch", function (e) {
-  if (e.request.method !== "GET") return;                                   // POST do backendu – bez SW
+  if (e.request.method !== "GET") return;                                   // POST to the backend - no SW
   var u = new URL(e.request.url);
-  if (u.origin !== self.location.origin) return;                            // script.google.com, googleusercontent, linki zewnętrzne – bez SW
-  if (u.pathname.indexOf(BAZA) !== 0) return;                               // poza katalogiem aplikacji
-  if (u.searchParams.has("token") || u.pathname.indexOf("/macros/") !== -1) return;   // na wszelki wypadek: nic z tokenem do cache
+  if (u.origin !== self.location.origin) return;                            // script.google.com, googleusercontent, external links - no SW
+  if (u.pathname.indexOf(BAZA) !== 0) return;                               // outside the app folder
+  if (u.pathname.indexOf(BAZA + "game/") === 0) return;                     // the game has its own service worker
+  if (u.searchParams.has("token") || u.pathname.indexOf("/macros/") !== -1) return;   // just in case: nothing with a token is ever cached
   if (u.pathname.indexOf(BAZA + "data/") === 0) {
     e.respondWith(fetch(e.request, { cache: "no-store" }).then(function (r) {
       if (r && r.ok) { var cp = r.clone(); caches.open(CACHE).then(function (c) { c.put(u.pathname, cp); }); }

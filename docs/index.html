@@ -1,10 +1,10 @@
 <!doctype html>
-<html lang="pl">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
-<title>Blue Mold · centrum dowodzenia Rovi Here</title>
-<meta name="description" content="Blue Mold: centrum dowodzenia RoviHere – pulpit publikacji, polecenia dla działów, statek i akta załogi.">
+<title>Blue Mold · Rovi's ship</title>
+<meta name="description" content="Blue Mold: Rovi's ship, crew files and the containment drills of the KALLICHORE-7 incident, inspired by the book “Blue Mold” by Cal Rennick.">
 <meta name="theme-color" content="#030e16">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
@@ -33,61 +33,63 @@
   <symbol id="i-cmd" viewBox="0 0 24 24"><path d="M4 5h16v14H4z"/><path d="M7.5 9.5l3 2.5-3 2.5M12.5 15h4"/></symbol>
   <symbol id="i-link" viewBox="0 0 24 24"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/></symbol>
   <symbol id="i-ref" viewBox="0 0 24 24"><path d="M19 12a7 7 0 1 1-2.1-5"/><path d="M19 4v4h-4"/></symbol>
+  <symbol id="i-game" viewBox="0 0 24 24"><path d="M4 4h16v16H4z"/><path d="M4 10h6v10M14 4v6h6"/><circle cx="16.5" cy="15.5" r="2.2"/></symbol>
   <symbol id="i-send" viewBox="0 0 24 24"><path d="M4 12l16-8-6 16-2.5-6.5z"/><path d="M11.5 13.5L20 4"/></symbol>
 </svg>
 
 <div id="app">
   <header class="hud">
     <div class="strip">
-      <span class="strip-l">BLUE MOLD · RAPORT POKŁADOWY</span>
+      <span class="strip-l">BLUE MOLD · SHIP REPORT</span>
       <span class="strip-r"><span id="chipStan" class="st stop"><i></i>STOP</span><span class="sep">·</span><span id="chipCzas">--:--</span></span>
     </div>
     <div class="bar">
-      <div class="logo"><b>BLUE MOLD</b><small>DOK. KX7-2189-0413 · CENTRUM DOWODZENIA ROVI HERE</small></div>
+      <div class="logo"><b>BLUE MOLD</b><small>DOC. KX7-2189-0413 · ROVI'S SHIP</small></div>
       <nav class="tools">
-        <button class="ib lb" id="btnPulpit" aria-label="Pulpit – centrum dowodzenia" title="Pulpit"><svg><use href="#i-dash"/></svg><span>Pulpit</span></button>
-        <button class="ib lb" id="btnPolecenia" aria-label="Polecenia dla załogi" title="Polecenia"><svg><use href="#i-cmd"/></svg><span>Polecenia</span></button>
-        <button class="ib" id="btnZaloga" aria-label="Rejestr załogi" title="Rejestr załogi"><svg><use href="#i-crew"/></svg></button>
-        <button class="ib" id="btnSnd" aria-label="Dźwięk" title="Dźwięk"><svg><use href="#i-snd"/></svg></button>
-        <button class="ib" id="btnInfo" aria-label="Protokół statku i ustawienia" title="Protokół statku"><svg><use href="#i-gear"/></svg></button>
+        <a class="ib lb play" id="btnGame" href="game/" aria-label="Play Blue Mold: Containment" title="Play Containment"><svg><use href="#i-game"/></svg><span>Play</span></a>
+        <button class="ib" id="btnPulpit" aria-label="Dashboard (owner tools)" title="Dashboard"><svg><use href="#i-dash"/></svg></button>
+        <button class="ib" id="btnPolecenia" aria-label="Commands (owner tools)" title="Commands"><svg><use href="#i-cmd"/></svg></button>
+        <button class="ib" id="btnZaloga" aria-label="Crew manifest" title="Crew manifest"><svg><use href="#i-crew"/></svg></button>
+        <button class="ib" id="btnSnd" aria-label="Sound" title="Sound"><svg><use href="#i-snd"/></svg></button>
+        <button class="ib" id="btnInfo" aria-label="Ship protocol and settings" title="Ship protocol"><svg><use href="#i-gear"/></svg></button>
       </nav>
     </div>
   </header>
 
   <div id="stage">
-    <canvas id="cv" aria-label="Schemat statku Blue Mold z załogą"></canvas>
+    <canvas id="cv" aria-label="Deck plan of the Blue Mold with its crew"></canvas>
     <div class="vign" aria-hidden="true"></div>
     <div class="scan" aria-hidden="true"></div>
     <div class="frame" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
-    <div class="cap tl" aria-hidden="true"><i class="recd"></i>SKAN POKŁADU · NA ŻYWO</div>
-    <div class="cap tr" id="capCrew" aria-live="polite">ZAŁOGA 12</div>
+    <div class="cap tl" aria-hidden="true"><i class="recd"></i>DECK SCAN · LIVE</div>
+    <div class="cap tr" id="capCrew" aria-live="polite">CREW 11</div>
     <div class="zoom">
-      <button id="zIn" aria-label="Przybliż"><svg><use href="#i-plus"/></svg></button>
-      <button id="zOut" aria-label="Oddal"><svg><use href="#i-minus"/></svg></button>
-      <button id="zFit" aria-label="Cały statek"><svg><use href="#i-fit"/></svg></button>
+      <button id="zIn" aria-label="Zoom in"><svg><use href="#i-plus"/></svg></button>
+      <button id="zOut" aria-label="Zoom out"><svg><use href="#i-minus"/></svg></button>
+      <button id="zFit" aria-label="Whole ship"><svg><use href="#i-fit"/></svg></button>
     </div>
     <div id="toast" class="toast" role="status"></div>
-    <div id="stamp" class="bigstamp" aria-hidden="true" hidden><b>NADANO</b><small id="stampSub">KX7 · TX</small></div>
-    <button id="btnUfo" class="ufo-fab" type="button" aria-label="Nadaj wiadomość do Rovi"><span class="ufo-ic"><svg><use href="#i-ufo"/></svg></span><span class="ufo-l"><b>Nadaj do Rovi</b><small>kanał UFO · KX7-TX</small></span></button>
+    <div id="stamp" class="bigstamp" aria-hidden="true" hidden><b>SENT</b><small id="stampSub">KX7 · TX</small></div>
+    <button id="btnUfo" class="ufo-fab" type="button" aria-label="Send a message to Rovi"><span class="ufo-ic"><svg><use href="#i-ufo"/></svg></span><span class="ufo-l"><b>Transmit to Rovi</b><small>UFO channel · KX7-TX</small></span></button>
     <div id="focus" class="focus" hidden>
       <div class="f-por"><img id="fAv" alt=""></div>
-      <div class="fi"><small class="fref" id="fRef">AKTA OSOBOWE</small><b id="fName"></b><small id="fRole" class="frole"></small><span class="fnow"><i id="fSt" class="light"></i><em id="fStT"></em> · <span id="fNow"></span></span></div>
-      <button class="ib" id="fDos" aria-label="Otwórz akta" title="Akta"><svg><use href="#i-file"/></svg></button>
-      <button class="ib" id="fClose" aria-label="Zamknij"><svg><use href="#i-x"/></svg></button>
+      <div class="fi"><small class="fref" id="fRef">PERSONNEL FILE</small><b id="fName"></b><small id="fRole" class="frole"></small><span class="fnow"><i id="fSt" class="light"></i><em id="fStT"></em> · <span id="fNow"></span></span></div>
+      <button class="ib" id="fDos" aria-label="Open file" title="File"><svg><use href="#i-file"/></svg></button>
+      <button class="ib" id="fClose" aria-label="Close"><svg><use href="#i-x"/></svg></button>
     </div>
   </div>
 
-  <aside id="roster" class="roster" aria-label="Rejestr załogi">
-    <div class="p-strip"><span>REJESTR ZAŁOGI</span><span id="rosterN">12 DZIAŁÓW</span></div>
+  <aside id="roster" class="roster" aria-label="Crew manifest">
+    <div class="p-strip"><span>CREW MANIFEST</span><span id="rosterN">11 CREW</span></div>
     <ol id="rosterList" class="roster-l"></ol>
   </aside>
 
-  <aside id="radio" class="radio" aria-label="Radio pokładowe">
+  <aside id="radio" class="radio" aria-label="Ship radio">
     <button class="radio-h" id="radioH" type="button">
       <span class="rec"><svg><use href="#i-radio"/></svg></span>
-      <span class="ch">KANAŁ 01 · TRANSKRYPT</span>
+      <span class="ch">CHANNEL 01 · TRANSCRIPT</span>
       <img id="radioAv" alt="">
-      <span id="radioLast" class="last">nasłuch…</span><span class="arr">▴</span>
+      <span id="radioLast" class="last">listening…</span><span class="arr">▴</span>
     </button>
     <ol id="feed" class="feed"></ol>
   </aside>
@@ -95,8 +97,8 @@
 
 <div id="sheet" class="sheet" role="dialog" aria-modal="true" hidden>
   <div class="sheet-in">
-    <div class="sheet-strip"><span id="sheetL">KALLICHORE-7 · RAPORT INCYDENTU</span><span id="sheetR">BLUE MOLD</span>
-      <button class="ib close" id="sheetClose" aria-label="Zamknij"><svg><use href="#i-x"/></svg></button></div>
+    <div class="sheet-strip"><span id="sheetL">KALLICHORE-7 · INCIDENT REPORT</span><span id="sheetR">BLUE MOLD</span>
+      <button class="ib close" id="sheetClose" aria-label="Close"><svg><use href="#i-x"/></svg></button></div>
     <div id="sheetBody"></div>
   </div>
 </div>
@@ -104,26 +106,25 @@
 <div id="boot">
   <div class="boot-art" aria-hidden="true"></div>
   <div class="boot-mold" aria-hidden="true"></div>
-  <div class="boot-strip"><span>KALLICHORE-7 · RAPORT INCYDENTU</span><span class="red">KWARANTANNA POZIOM 5</span></div>
-  <p class="boot-doc">DOK. KX7-2189-0413 · BLUE MOLD · ZAPIS ODZYSKANY</p>
+  <div class="boot-strip"><span>KALLICHORE-7 · INCIDENT REPORT</span><span class="red">QUARANTINE LEVEL 5</span></div>
+  <p class="boot-doc">DOC. KX7-2189-0413 · BLUE MOLD · RECOVERED RECORD</p>
   <div class="boot-in">
     <p class="boot-author">ROVI HERE</p>
     <h1><span>BLUE</span><span>MOLD</span></h1>
     <div class="boot-rule"></div>
-    <p class="boot-sub">Akta załogi</p>
-    <div class="boot-stamp"><b>ODTAJNIONO</b><small>KX7 · 2189 · POZIOM 2</small></div>
+    <p class="boot-sub">Crew files</p>
+    <div class="boot-stamp"><b>DECLASSIFIED</b><small>KX7 · 2189 · LEVEL 2</small></div>
     <div id="bootLog" class="log"></div>
   </div>
   <div class="boot-foot">
     <div class="bars"><i id="bootBar"></i></div>
-    <p>NIE ODPOWIADAĆ NA SYGNAŁ · NIE OTWIERAĆ ŁADOWNI NR 3</p>
-    <p class="skip">dotknij, aby pominąć</p>
+    <p>DO NOT ANSWER THE SIGNAL · DO NOT OPEN CARGO HOLD 3</p>
+    <p class="skip">tap to skip</p>
   </div>
   <div class="frame" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
 </div>
 
-<script src="data/zaloga.js"></script>
-<script src="data/stan.js"></script>
+<script src="data/crew.js"></script>
 <script src="app.js"></script>
 <script src="centrum.js"></script>
 </body>

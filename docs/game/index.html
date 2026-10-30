@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Blue Mold: Containment</title>
+<meta name="description" content="A turn-based containment puzzle on the deck plan of the freighter Shadow Spark. Seal the bulkheads before the blue mold reaches the bridge. Twelve case files from the KALLICHORE-7 incident. Based on the book Blue Mold by Cal Rennick.">
+<meta name="theme-color" content="#22262a">
+<meta name="color-scheme" content="light">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Containment">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="stylesheet" href="css/game.css">
+</head>
+<body>
+<div id="paper" aria-hidden="true"></div>
+
+<!-- TITLE -->
+<section id="scrTitle" class="scr on" aria-label="Title screen">
+  <div class="title-top"><span>CASE FILES · KALLICHORE-7</span><span>SHADOW SPARK · SATURN SYSTEM</span></div>
+  <div class="title-art" aria-hidden="true"><canvas id="titleArt" width="360" height="360"></canvas></div>
+  <h1 class="logo"><span class="l1">BLUE MOLD</span><span class="l2">Containment</span></h1>
+  <p class="tag">Seal the bulkheads. Keep the blue away from the bridge.</p>
+  <div class="menu">
+    <button class="btn big" id="btnPlay" type="button">Open case file</button>
+    <button class="btn" id="btnCases" type="button">Case files</button>
+    <button class="btn" id="btnHow" type="button">How to play</button>
+    <button class="btn ghost" id="btnAbout" type="button">About</button>
+  </div>
+  <p class="credit">Based on the book <i>Blue Mold</i> by Cal Rennick</p>
+</section>
+
+<!-- LEVEL SELECT -->
+<section id="scrCases" class="scr" aria-label="Case files">
+  <header class="bar"><button class="ib" data-go="title" aria-label="Back">&larr;</button><h2>Case files</h2><span id="casesSum" class="sum"></span></header>
+  <p class="sub">Reconstructed from the flight recorder of the freighter <i>Shadow Spark</i>. Close a case to open the next one.</p>
+  <ol id="caseList" class="cases"></ol>
+  <p id="caseLockNote" class="note" hidden></p>
+</section>
+
+<!-- GAME -->
+<section id="scrGame" class="scr" aria-label="Containment">
+  <header class="bar">
+    <button class="ib" id="gBack" aria-label="Case files">&larr;</button>
+    <div class="gt"><small id="gCode">KX7-01</small><b id="gTitle">Dock 14</b></div>
+    <span class="turn" id="gTurn">Turn 0</span>
+  </header>
+  <div class="hud">
+    <span class="chip" id="gSeals" title="Seals left"><i class="ico seal"></i><b>1</b><small>seals</small></span>
+    <span class="chip" id="gTorch" title="Torch charges"><i class="ico torch"></i><b>0</b><small>torch</small></span>
+    <span class="chip wide" id="gClean" title="Deck still clean"><b>100%</b><small>clean</small></span>
+  </div>
+  <div id="board" class="board"><canvas id="cv" aria-label="Deck plan"></canvas><div id="toast" class="toast" role="status" aria-live="polite"></div></div>
+  <p id="srStatus" class="sr" aria-live="polite"></p>
+  <nav class="actions" aria-label="Actions">
+    <button class="act" id="aUndo" type="button" aria-label="Undo last turn"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 7H5V3"/><path d="M5.5 7.5A8 8 0 1 1 4 13"/></svg><small>Undo</small></button>
+    <button class="act" id="aTorch" type="button" aria-pressed="false" aria-label="Torch mode"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3c1 3 4 4.5 4 8.5a4 4 0 0 1-8 0c0-2 1-3 2-4 0 2 1 3 2 3 0-3-1-5 0-7.5z"/><path d="M10 19h4M11 22h2"/></svg><small>Torch</small></button>
+    <button class="act main" id="aWait" type="button" aria-label="Wait one turn"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h12M6 21h12"/><path d="M7 3c0 5 10 5 10 9s-10 4-10 9"/><path d="M17 3c0 5-10 5-10 9s10 4 10 9"/></svg><small>Wait</small></button>
+    <button class="act" id="aRestart" type="button" aria-label="Restart case"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 7h4V3"/><path d="M18.5 7.5A8 8 0 1 0 20 13"/></svg><small>Restart</small></button>
+  </nav>
+</section>
+
+<!-- HOW TO PLAY -->
+<section id="scrHow" class="scr" aria-label="How to play">
+  <header class="bar"><button class="ib" data-go="back" aria-label="Back">&larr;</button><h2>How to play</h2></header>
+  <div class="doc">
+    <p>Each case is a deck plan of the freighter <i>Shadow Spark</i>. The glowing blue is the mold.</p>
+    <ol class="rules">
+      <li><b>One action per turn.</b> Tap a <b>door</b> or a <b>vent</b> to seal it (uses one seal), switch on the <b>torch</b> and tap a mold cell to burn it to ash, or press <b>Wait</b>.</li>
+      <li><b>Then the mold grows</b> into every open neighbouring cell &ndash; up, down, left and right. The faint blue dots show where it will grow next.</li>
+      <li><b>Vents are connected.</b> If the mold reaches an open vent, next turn it bursts out of every other open vent.</li>
+      <li><b>Frost slows it down.</b> Cold storage cells (marked with asterisks) need two turns to be overgrown.</li>
+      <li><b>Ash is final.</b> Nothing grows through a burned cell. Infected doors can no longer be sealed &ndash; but they can be burned.</li>
+      <li><b>Win</b> when the mold has nowhere left to grow. <b>Lose</b> if it touches the bridge, the reactor or the crew quarters.</li>
+    </ol>
+    <p>Stars: three stars for the smallest possible infection, fewer for a messier containment. <b>Undo</b> takes back one turn; <b>Restart</b> begins the case again.</p>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="scrAbout" class="scr" aria-label="About">
+  <header class="bar"><button class="ib" data-go="back" aria-label="Back">&larr;</button><h2>About</h2></header>
+  <div class="doc">
+    <p><b>Blue Mold: Containment</b> is a small puzzle game set in the world of the sci-fi horror novel <i>Blue Mold</i> by Cal Rennick. A freighter, a frozen container from the station Kallichore-7, sixteen hours to Enceladus &ndash; and something blue that keeps growing.</p>
+    <p>The game works offline, has no ads, no accounts and no purchases, and collects no data. Your progress is saved only on this device. <a href="privacy.html">Privacy policy</a></p>
+    <p class="soon"><b><i>Blue Mold</i> by Cal Rennick</b> &mdash; coming soon.</p>
+    <p class="small">Follow Rovi Here for the story, music and news:</p>
+    <p class="links"><a class="btn small" href="https://www.youtube.com/@RoviHere" target="_blank" rel="noopener">YouTube</a><a class="btn small" href="https://www.tiktok.com/@roviheree" target="_blank" rel="noopener">TikTok</a><a class="btn small" href="https://x.com/RoviHere" target="_blank" rel="noopener">X</a><a class="btn small" href="https://suno.com/@kkruk93" target="_blank" rel="noopener">Suno (music)</a></p>
+    <p class="small">Code and art are original. Typefaces: EB Garamond and IBM Plex Mono (SIL Open Font License, see <a href="fonts/OFL-EBGaramond.txt">OFL</a>). Version <span id="ver"></span>.</p>
+    <p class="small"><a href="../">&larr; Back to the Blue Mold ship</a></p>
+    <p><button class="btn ghost small" id="btnReset" type="button">Reset progress</button></p>
+  </div>
+</section>
+
+<!-- MODAL (briefing / result) -->
+<div id="modal" class="modal" hidden role="dialog" aria-modal="true" aria-labelledby="mTitle">
+  <div class="card">
+    <div class="card-top"><span id="mKicker">CASE FILE</span><span id="mCode">KX7-01</span></div>
+    <h3 id="mTitle">Dock 14</h3>
+    <p id="mTime" class="time"></p>
+    <div id="mBody"></div>
+    <div id="mStamp" class="stamp" hidden></div>
+    <div class="row" id="mBtns"></div>
+  </div>
+</div>
+
+<script src="js/engine.js"></script>
+<script src="js/levels.js"></script>
+<script src="js/render.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>
